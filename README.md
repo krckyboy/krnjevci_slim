@@ -1,0 +1,2 @@
+# krnjevci_slim
+ 
