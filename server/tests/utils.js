@@ -391,9 +391,15 @@ async function removeBundleFromCart({ bundleId, token, status = 200 }) {
 	}
 }
 
-async function getAllProductsFromCart({ token, status = 200, test = false }) {
+async function getAllProductsFromCart({
+	token,
+	status = 200,
+	test = false,
+	start,
+	end,
+}) {
 	const res = await request(app)
-		.get(`/api/cart/`)
+		.get(`/api/cart?start=${start}&end=${end}`)
 		.set('Authorization', `Bearer ${token}`)
 		.expect(status)
 		.send({ test })

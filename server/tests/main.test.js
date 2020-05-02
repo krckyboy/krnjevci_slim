@@ -386,7 +386,7 @@ test('Search tutorials by name', async () => {
 	expect(searchResult3.length).toBe(2)
 })
 
-// /addTutorial
+// Cart /addTutorial
 test('/addTutorial', async () => {
 	// 404 if not exist
 	// 404 if archived
@@ -626,10 +626,12 @@ test('/addTutorial', async () => {
 	expect(userThreeBoughtTutorialsIds.includes(fourth.id))
 })
 
+// Cart /removeTutorial
 test('/removeTutorial', async () => {
 	// 404 if not exist
 	// 404 if not added to cart
 	// Check if carts are unique to individual users
+	// 200 if removing archived
 
 	await createAdminAccount({ status: 201 })
 
@@ -808,6 +810,112 @@ test('/removeTutorial', async () => {
 		status: 404,
 		tutorialId: fifth.id,
 	})
+})
+
+// Cart /getAllProducts
+test('/getAllProducts', async () => {
+	// Remove archived tutorials
+	// Check if pagination works as intended
+
+	// User adds 5 tutorials to cart
+	// User archives tutorial 5
+	// User has 4 tutorials, excluding tutorial 5
+	// Pagination works, fetching latest 2
+	// Create an admin account with specified email
+	await createAdminAccount({ status: 201 })
+
+	// Create 5 tutorials
+	const first = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial1 },
+	})
+
+	const second = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial2 },
+	})
+
+	const third = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial3 },
+	})
+
+	const fourth = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial4 },
+	})
+
+	const fifth = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial5 },
+	})
+
+	// Add 2 tutorials to cart
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: first.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: second.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: third.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: fourth.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: fifth.id,
+	})
+
+	await archiveTutorial({
+		status: 200,
+		token: adminUser.token,
+		tutorialId: fifth.id,
+	})
+
+	const userOneCartProducts = await getAllProductsFromCart({
+		token: userOne.token,
+		status: 200,
+	})
+
+	expect(userOneCartProducts.products.tutorials.total).toBe(4)
+	const userOneTutorialIds = userOneCartProducts.products.tutorials.results.map(
+		(t) => t.id
+	)
+	expect(userOneTutorialIds.includes(first.id)).toBe(true)
+	expect(userOneTutorialIds.includes(second.id)).toBe(true)
+	expect(userOneTutorialIds.includes(third.id)).toBe(true)
+	expect(userOneTutorialIds.includes(fourth.id)).toBe(true)
+	expect(userOneTutorialIds.includes(fifth.id)).toBe(false)
+
+	const userOneCartProductsOnly2 = await getAllProductsFromCart({
+		token: userOne.token,
+		status: 200,
+		start: 0,
+		end: 1,
+	})
+
+	expect(userOneCartProductsOnly2.products.tutorials.total).toBe(4)
+	expect(userOneCartProductsOnly2.products.tutorials.results.length).toBe(2)
 })
 
 // Buy products from cart, /charge
