@@ -7,11 +7,6 @@ const auth = require('../middleware/auth')
 // Private
 router.post('/tutorial/:id', [auth], require('../controllers/cart/addTutorial'))
 
-// POST /api/cart/bundle/:id
-// Add a bundle to the cart
-// Private
-router.post('/bundle/:id', [auth], require('../controllers/cart/addBundle'))
-
 // DELETE /api/cart/tutorial/:id
 // Clear cart
 // Private
@@ -24,15 +19,6 @@ router.delete(
 	'/tutorial/:id',
 	[auth],
 	require('../controllers/cart/removeTutorial')
-)
-
-// DELETE /api/cart/bundle/:id
-// Remove a bundle from the cart
-// Private
-router.delete(
-	'/bundle/:id',
-	[auth],
-	require('../controllers/cart/removeBundle')
 )
 
 // GET /api/cart/tutorial/:id

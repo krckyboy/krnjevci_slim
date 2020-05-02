@@ -7,7 +7,6 @@ class User extends Model {
 
 	static get relationMappings() {
 		const Tutorial = require('./Tutorial')
-		const TutorialBundle = require('./TutorialBundle')
 		const Cart = require('./Cart')
 
 		return {
@@ -21,18 +20,6 @@ class User extends Model {
 						to: 'bought_tutorials.tutorial_id',
 					},
 					to: 'tutorials.id',
-				},
-			},
-			bought_bundles: {
-				relation: Model.ManyToManyRelation,
-				modelClass: TutorialBundle,
-				join: {
-					from: 'users.id',
-					through: {
-						from: 'bought_bundles.user_id',
-						to: 'bought_bundles.bundle_id',
-					},
-					to: 'tutorial_bundles.id',
 				},
 			},
 			cart: {
