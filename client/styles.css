@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,600&display=swap');
+
+body {
+	background-color: #f2f2f2;
+}
+
+body,
+a {
+	font-family: 'Open Sans', sans-serif;
+	color: #406798;
+}
+
+a {
+	text-decoration: none;
+}
+
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: inherit;
+}
+
+html {
+	font-size: 62.5%;
+	max-height: 100vh;
+}
+
+body {
+	box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: normal;
+	font-style: normal;
+	font-size: inherit;
+}
+
+ul {
+	list-style: none;
+}
+
+li {
+	display: inline-block;
+}
+
+/* Sticky footer part */
+html,
+body {
+	/* height: 100%; */
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+#__next {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 100vh;
+}
+
+.content {
+	flex: 1 0 auto;
+	background-color: #f2f2f2;
+	/* padding: 10px; */
+}
+
+.footer {
+	flex-shrink: 0;
+}
+
+/* /Sticky footer part */
+
+.bodyPadding {
+	padding-left: 2.4rem;
+	padding-right: 2.4rem;
+}
+
+.active {
+	font-weight: 900 !important;
+}
+
+/* Input styles */
+
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'],
+textarea {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.3rem;
+  color: #828282;
+  line-height: 2rem;
+}
+
+input:focus {
+	outline: #828282 auto 1px;
+}
+
+::-webkit-input-placeholder {
+	color: #BDBDBD;
+	font-size: 1.3rem;
+}
+::-moz-placeholder {
+	color: #BDBDBD;
+	font-size: 1.3rem;
+}
+:-ms-input-placeholder {
+	color: #BDBDBD;
+	font-size: 1.3rem;
+}
+::placeholder {
+	color: #BDBDBD;
+	font-size: 1.3rem;
+}
+
+label {
+	font-style: normal;
+	font-weight: 600;
+	font-size: 1.3rem;
+	line-height: 1.9rem;
+}

@@ -1,0 +1,32 @@
+const Tutorial = require('../../../db/models/Tutorial')
+
+module.exports = async (req, res) => {
+	// @todo Add validation
+	try {
+		// @todo Validate fields
+		const { name, vimeo_id, vimeo_preview_id, price, description } = req.body
+
+		// Check if tutorial with that name exists
+		const existingTutorial = await Tutorial.query().findOne({ name })
+
+		if (existingTutorial) {
+			return res
+				.status(400)
+				.json({ msg: 'There is already a tutorial under that name!' })
+		}
+
+		// Create tutorial
+		const newTutorial = await Tutorial.query().insert({
+			name,
+			vimeo_id,
+			vimeo_preview_id,
+			price,
+			description,
+		})
+
+		res.status(201).json({ tutorial: newTutorial })
+	} catch (err) {
+		console.error(err)
+		res.status(500).json({ msg: 'Server error' })
+	}
+}

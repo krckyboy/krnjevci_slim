@@ -1,0 +1,29 @@
+## Instead of'registracija' use button instead
+
+## Add icon for 'korpa'
+
+## Host in GH FE and BE separately, and then use one master repo to connect
+
+## After FE is done, test vimeo. Make it so that every video has a public preview (vimeo, maybe also youtube for other platforms). Use the thumbnail of the public video for the website so you wouldn't store images on the app.
+
+##  Add logic to search bar 
+
+##  Add logic to pagination
+
+## Sign in /tutorials if bought
+
+## Add onchange for Izmeni tutorijal
+
+## Add states for dodaj tutorijal
+
+## Add korpa to header
+
+## Code header for desktop
+
+## Search bar for tutorials should always be visible on header
+
+## Check if you can download video, check if it is private
+
+## Design the stuff for updated video
+
+## Redirect from 'buy' to register / login and then back to the tutorial

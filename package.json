@@ -1,0 +1,12 @@
+{
+  "name": "krnjevci",
+  "version": "1.0.0",
+  "description": "E-learning web platform for accordion where users purchase tutorials.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Dusan Todorovic Krnjevac (Krcky)",
+  "license": "ISC"
+}
