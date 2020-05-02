@@ -71,7 +71,7 @@ module.exports = async (req, res) => {
 					total: fetchedTutorials.total,
 				}
 
-				return res.status(200).json({ tutorials: tutorialsToReturn })
+				return res.status(200).json({ tutorials: { ...tutorialsToReturn } })
 			}
 		)
 	} catch (err) {

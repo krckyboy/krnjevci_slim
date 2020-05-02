@@ -1,36 +1,31 @@
 const Purchase = require('../../db/models/Purchase')
 const Cart = require('../../db/models/Cart')
 const User = require('../../db/models/User')
-const clearCartOfArchivedProductsAndConflicts = require('../utils/clearCartOfArchivedProductsAndConflicts')
+const clearCartOfArchivedTutorials = require('../utils/clearCartOfArchivedTutorials')
 
 module.exports = async (req, res) => {
 	try {
 		// Fetch user's cart, tutorials and bundles
 		const userCart = await Cart.query()
 			.findOne({ user_id: req.user.id })
-			.eager('[bundles.[tutorials], tutorials]')
+			.eager('tutorials')
 
-		const { bundles, tutorials } = userCart
+		const { tutorials } = userCart
 
-		// if (req.body.test) {
-		// 	console.log(userCart)
-		// }
+		// Check if there are archived tutorials and remove them from cart if that's true.
+		const archivedProducts = await clearCartOfArchivedTutorials(userCart)
 
-		const cartUpdatedMsg = await clearCartOfArchivedProductsAndConflicts(
-			userCart
-		)
-
-		if (cartUpdatedMsg) {
-			return res.status(400).json({ msg: cartUpdatedMsg })
+		if (archivedProducts) {
+			return res.status(400).json({
+				msg: `Pronađeni su arhivirani artikli u korpi. Korpa je osvežena. Pokušajte ponovo!`,
+			})
 		}
 
 		// Calculate the price
-		const tutorialsPrice = tutorials
+		const price = tutorials
+			.filter((t) => !t.archived)
 			.map((t) => t.price)
 			.reduce((a, b) => a + b, 0)
-		const bundlesPrice = bundles.map((b) => b.price).reduce((a, b) => a + b, 0)
-
-		const price = tutorialsPrice + bundlesPrice
 
 		// @todo Charge user
 
@@ -38,13 +33,12 @@ module.exports = async (req, res) => {
 		const graphDataPurchase = {
 			user_id: req.user.id,
 			tutorials,
-			bundles,
 			price,
 		}
 
 		const optionsPurchase = {
-			relate: ['tutorials', 'bundles'],
-			unrelate: ['tutorials', 'bundles'],
+			relate: ['tutorials'],
+			unrelate: ['tutorials'],
 		}
 
 		await Purchase.query().upsertGraphAndFetch(
@@ -54,23 +48,21 @@ module.exports = async (req, res) => {
 
 		// Clear user's cart
 		await userCart.$relatedQuery('tutorials').unrelate()
-		await userCart.$relatedQuery('bundles').unrelate()
 
 		// Fetch user and already bought tutorials and bundles from before
 		const user = await User.query()
 			.findOne({ id: req.user.id })
-			.eager('[bought_tutorials, bought_bundles, cart.[tutorials, bundles]]')
+			.eager('[bought_tutorials, cart.[tutorials]]')
 
 		// Combine old and new tutorials and bundles for upsert
 		const graphDataUser = {
 			...user,
 			bought_tutorials: [...tutorials, ...user.bought_tutorials],
-			bought_bundles: [...bundles, ...user.bought_bundles],
 		}
 
 		const optionsUser = {
-			relate: ['cart', 'bought_tutorials', 'bought_bundles'],
-			unrelate: ['cart', 'bought_tutorials', 'bought_bundles'],
+			relate: ['cart', 'bought_tutorials'],
+			unrelate: ['cart', 'bought_tutorials'],
 		}
 
 		// If charged successfully: Relate tutorials to bought_tutorials and bundles bought_bundles (if bundle is bought, relate both bought_tutorials and bought_bundles)

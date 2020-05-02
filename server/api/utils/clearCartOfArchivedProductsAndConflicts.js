@@ -1,4 +1,4 @@
-const clearCartOfArchivedTutorialsAndBundles = require('./clearCartOfArchivedTutorialsAndBundles')
+const clearCartOfArchivedTutorialsAndBundles = require('./clearCartOfArchivedTutorials')
 const removeTutorialsInConflictWithinCart = require('./removeTutorialsInConflictWithinCart')
 
 module.exports = async function clearCartOfArchivedProductsAndConflicts(

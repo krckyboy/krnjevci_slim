@@ -5,6 +5,7 @@ const {
 	login,
 	userOne,
 	userTwo,
+	userThree,
 	adminUser,
 	createAdminAccount,
 	tutorial1,
@@ -385,19 +386,244 @@ test('Search tutorials by name', async () => {
 	expect(searchResult3.length).toBe(2)
 })
 
-// /addTutorial, /removeTutorial, /clearCart, /getProductsFromCart
-test('Basic cart functionality', async () => {
-	
+// /addTutorial
+test('/addTutorial', async () => {
+	// 404 if not exist
+	// 404 if archived
+	// 400 if already added to cart
+	// 400 if already bought
+	// Check if carts are unique to individual users
+
+	// Create an admin account with specified email
+	await createAdminAccount({ status: 201 })
+
+	// Create 5 tutorials
+	const first = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial1 },
+	})
+
+	const second = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial2 },
+	})
+
+	const third = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial3 },
+	})
+
+	const fourth = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial4 },
+	})
+
+	const fifth = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial5 },
+	})
+
+	// Add 2 tutorials to cart
+	const addedTutorial1 = await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: first.id,
+	})
+
+	const addedTutorial2 = await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: second.id,
+	})
+
+	expect(addedTutorial1.id).toBe(first.id)
+	expect(addedTutorial2.id).toBe(second.id)
+
+	// 404 when not exist
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 404,
+		tutorialId: 9999,
+	})
+
+	// Admin archives tutorial 3
+	await archiveTutorial({
+		status: 200,
+		token: adminUser.token,
+		tutorialId: third.id,
+	})
+
+	// Fail to add archived tutorial
+	const notFoundMessage = await addTutorialToCart({
+		token: userOne.token,
+		status: 404,
+		tutorialId: third.id,
+	})
+
+	expect(notFoundMessage.msg).toBe('Artikl ne postoji!')
+
+	const alreadyAddedMessage = await addTutorialToCart({
+		token: userOne.token,
+		status: 400,
+		tutorialId: first.id,
+	})
+
+	expect(alreadyAddedMessage.msg).toBe('Artikl je već dodat u korpu!')
+
+	// Fetch user one's cart, make sure it's 2, tutorial 1 and 2
+	const userOneCartProducts = await getAllProductsFromCart({
+		token: userOne.token,
+		status: 200,
+	})
+
+	// There are 2 tutorials in cart
+	expect(userOneCartProducts.products.tutorials.total).toBe(2)
+	expect(userOneCartProducts.products.tutorials.results[0].id).toBe(first.id)
+	expect(userOneCartProducts.products.tutorials.results[1].id).toBe(second.id)
+
+	// User makes the purchase, buying 2 tutorials: 1, 2
+	await charge({
+		status: 200,
+		token: userOne.token,
+		test: true,
+	})
+
+	// Check if user has 2 bought tutorials
+	const userOneBoughtTutorials = await fetchBoughtTutorials({
+		token: userOne.token,
+		status: 200,
+		test: true,
+	})
+
+	expect(userOneBoughtTutorials.tutorials.total).toBe(2)
+	const boughtTutorialsIds = userOneBoughtTutorials.tutorials.results.map(
+		(t) => t.id
+	)
+
+	expect(boughtTutorialsIds.includes(first.id))
+	expect(boughtTutorialsIds.includes(second.id))
+
+	const alreadyBoughtMsg = await addTutorialToCart({
+		token: userOne.token,
+		status: 400,
+		tutorialId: first.id,
+	})
+
+	expect(alreadyBoughtMsg.msg).toBe(
+		'Ne možete dodati artikl koji sve već kupili!'
+	)
+
+	// User two registers
+	// User three registers
+	await registerNewUser({
+		user: userTwo,
+		status: 201,
+	})
+
+	await registerNewUser({
+		user: userThree,
+		status: 201,
+	})
+
+	// User two adds 1, 2 tutorials
+	// User three adds 2, 3
+	await addTutorialToCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: first.id,
+	})
+
+	await addTutorialToCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: second.id,
+	})
+
+	await addTutorialToCart({
+		token: userThree.token,
+		status: 200,
+		tutorialId: second.id,
+	})
+
+	await addTutorialToCart({
+		token: userThree.token,
+		status: 200,
+		tutorialId: fourth.id,
+	})
+
+	// User two has 1, 2 tutorials
+	// User three has 2, 4 tutorials
+	const userTwoCartProducts = await getAllProductsFromCart({
+		token: userTwo.token,
+		status: 200,
+	})
+
+	const userThreeCartProducts = await getAllProductsFromCart({
+		token: userThree.token,
+		status: 200,
+	})
+
+	expect(userTwoCartProducts.products.tutorials.total).toBe(2)
+	expect(userTwoCartProducts.products.tutorials.results[0].id).toBe(first.id)
+	expect(userTwoCartProducts.products.tutorials.results[1].id).toBe(second.id)
+
+	expect(userThreeCartProducts.products.tutorials.total).toBe(2)
+	expect(userThreeCartProducts.products.tutorials.results[0].id).toBe(second.id)
+	expect(userThreeCartProducts.products.tutorials.results[1].id).toBe(fourth.id)
+
+	// User two and three make the purchase
+	await charge({
+		status: 200,
+		token: userTwo.token,
+		test: true,
+	})
+
+	await charge({
+		status: 200,
+		token: userThree.token,
+		test: true,
+	})
+
+	// User two has 1, 2 bought tutorials
+	// User three has 2, 3 bought tutorials
+	const userTwoBoughtTutorials = await fetchBoughtTutorials({
+		token: userTwo.token,
+		status: 200,
+		test: true,
+	})
+
+	expect(userTwoBoughtTutorials.tutorials.total).toBe(2)
+	const userTwoBoughtTutorialsIds = userTwoBoughtTutorials.tutorials.results.map(
+		(t) => t.id
+	)
+
+	expect(userTwoBoughtTutorialsIds.includes(first.id))
+	expect(userTwoBoughtTutorialsIds.includes(second.id))
+
+	const userThreeBoughtTutorials = await fetchBoughtTutorials({
+		token: userThree.token,
+		status: 200,
+		test: true,
+	})
+
+	expect(userThreeBoughtTutorials.tutorials.total).toBe(2)
+	const userThreeBoughtTutorialsIds = userThreeBoughtTutorials.tutorials.results.map(
+		(t) => t.id
+	)
+
+	expect(userThreeBoughtTutorialsIds.includes(second.id))
+	expect(userThreeBoughtTutorialsIds.includes(fourth.id))
 })
 
 // Buy products from cart, /charge
 // That check could be an API + function that runs when the user clicks on enter card details and that function can be repeated - function returning list of products and total price
-test('Buy products from cart', async () => {
+test('Buy products from cart', async () => {})
 
-})
-
-test('Clearing archived products from cart upon /addTutorial', async () => {
-
-})
+test('Clearing archived products from cart upon /addTutorial', async () => {})
 
 // Fetch my tutorials (archived or not, doesn't matter)

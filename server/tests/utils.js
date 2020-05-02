@@ -23,6 +23,13 @@ const userTwo = {
 	id: '',
 }
 
+const userThree = {
+	email: 'userThree@gmail.com',
+	password: 'password',
+	token: '',
+	id: '',
+}
+
 const tutorial1 = {
 	name: 'Gunj kolo',
 	vimeo_id: '408197065',
@@ -385,8 +392,8 @@ async function getAllProductsFromCart({ token, status = 200, test = false }) {
 		.expect(status)
 		.send({ test })
 
-	if (res.body.products) {
-		return res.body.products
+	if (res.body) {
+		return res.body
 	} else {
 		const errorObject = JSON.parse(res.error.text)
 		return errorObject
@@ -400,15 +407,21 @@ async function clearCart({ token, status = 200 }) {
 		.expect(status)
 }
 
-async function fetchBoughtTutorials({ token, status = 200, start, end, test = false }) {
+async function fetchBoughtTutorials({
+	token,
+	status = 200,
+	start,
+	end,
+	test = false,
+}) {
 	const res = await request(app)
 		.get(`/api/tutorials/bought?start=${start}&end=${end}`)
 		.set('Authorization', `Bearer ${token}`)
 		.expect(status)
 		.send({ test })
 
-	if (res.body.tutorials) {
-		return res.body.tutorials
+	if (res.body) {
+		return res.body
 	} else {
 		const errorObject = JSON.parse(res.error.text)
 		return errorObject
@@ -431,6 +444,7 @@ async function fetchBundlesOfTutorial({ token, status = 200, tutorialId }) {
 module.exports = {
 	userOne,
 	userTwo,
+	userThree,
 	adminUser,
 	tutorial1,
 	tutorial2,
