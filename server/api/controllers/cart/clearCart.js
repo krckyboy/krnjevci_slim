@@ -5,21 +5,15 @@ module.exports = async (req, res) => {
 		// Check if user already has that tutorial in cart
 		const userCart = await Cart.query()
 			.findOne({ user_id: req.user.id })
-			.eager('[tutorials, bundles]')
+			.eager('[tutorials]')
 
-		const { tutorials, bundles } = userCart
+		const { tutorials } = userCart
 
-		if (tutorials.length === 0 && bundles.length === 0) {
+		if (tutorials.length === 0) {
 			return res.status(400).json({ msg: 'Cart is already empty!' })
 		}
 
-		await userCart
-			.$relatedQuery('tutorials')
-			.unrelate()
-
-		await userCart
-			.$relatedQuery('bundles')
-			.unrelate()
+		await userCart.$relatedQuery('tutorials').unrelate()
 
 		res.status(200).send()
 	} catch (err) {
