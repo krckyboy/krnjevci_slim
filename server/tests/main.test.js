@@ -493,8 +493,8 @@ test('/addTutorial', async () => {
 		(t) => t.id
 	)
 
-	expect(boughtTutorialsIds.includes(first.id))
-	expect(boughtTutorialsIds.includes(second.id))
+	expect(boughtTutorialsIds.includes(first.id)).toBe(true)
+	expect(boughtTutorialsIds.includes(second.id)).toBe(true)
 
 	const alreadyBoughtMsg = await addTutorialToCart({
 		token: userOne.token,
@@ -1191,15 +1191,164 @@ test('/charge', async () => {
 	// 400 if archived tutorials found, but don’t update cart, leave that to /refreshCart
 	// Check if bought tutorials are unique to individual users
 	// Check if cart is empty after purchase
+
 	// User one adds 1, 2, 3 to cart
 	// User two adds 3, 4
 	// Admin archives 4
+
 	// User one successfully buys 1, 2, 3
 	// User two gets 400 since tutorial 4 is archived
 	// User two tries to purchase once again, but gets 400 again
 	// User two refreshes cart and then successfully makes the purchase
+	// User one's cart is empty
+	// User two's cart is empty, as well
+
 	// User one fetches bought tutorials, has 1, 2, 3
 	// User two fetches bought tutorials, has 3
+
+	// Create an admin account with specified email
+	await createAdminAccount({ status: 201 })
+
+	// Create 5 tutorials
+	const first = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial1 },
+	})
+
+	const second = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial2 },
+	})
+
+	const third = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial3 },
+	})
+
+	const fourth = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial4 },
+	})
+
+	// Users adding tutorials to cart
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: first.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: second.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: third.id,
+	})
+
+	await registerNewUser({ user: userTwo, status: 201 })
+
+	await addTutorialToCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: third.id,
+	})
+
+	await addTutorialToCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: fourth.id,
+	})
+
+	// Archiving
+	await archiveTutorial({
+		status: 200,
+		token: adminUser.token,
+		tutorialId: fourth.id,
+	})
+
+	// Purchase
+	await charge({
+		status: 200,
+		token: userOne.token,
+	})
+
+	// User two fails
+	await charge({
+		status: 400,
+		token: userTwo.token,
+	})
+
+	// User two fails again
+	await charge({
+		status: 400,
+		token: userTwo.token,
+	})
+
+	await refreshCart({ token: userTwo.token, status: 200 })
+
+	await charge({
+		status: 200,
+		token: userTwo.token,
+	})
+
+	const tutorialsInCartOne = await Tutorial.query()
+		.select(
+			'tutorials.id',
+			'tutorials.name',
+			'tutorials.description',
+			'tutorials.price',
+			'tutorials.archived'
+		)
+		.joinRelation('cart_tutorials')
+		.where({ user_id: userOne.id })
+
+	expect(tutorialsInCartOne.length).toBe(0)
+
+	const tutorialsInCartTwo = await Tutorial.query()
+		.select(
+			'tutorials.id',
+			'tutorials.name',
+			'tutorials.description',
+			'tutorials.price',
+			'tutorials.archived'
+		)
+		.joinRelation('cart_tutorials')
+		.where({ user_id: userTwo.id })
+
+	expect(tutorialsInCartTwo.length).toBe(0)
+
+	// Check what tutorials are bought
+	const userOneBoughtTutorials = await fetchBoughtTutorials({
+		token: userOne.token,
+		status: 200,
+		test: true,
+	})
+
+	expect(userOneBoughtTutorials.tutorials.total).toBe(3)
+	const boughtTutorialsIds = userOneBoughtTutorials.tutorials.results.map(
+		(t) => t.id
+	)
+
+	expect(boughtTutorialsIds.includes(first.id)).toBe(true)
+	expect(boughtTutorialsIds.includes(second.id)).toBe(true)
+	expect(boughtTutorialsIds.includes(third.id)).toBe(true)
+
+	const userTwoBoughtTutorials = await fetchBoughtTutorials({
+		token: userTwo.token,
+		status: 200,
+		test: true,
+	})
+
+	expect(userTwoBoughtTutorials.tutorials.total).toBe(1)
+	expect(userTwoBoughtTutorials.tutorials.results[0].id).toBe(third.id)
 })
 
 test('Clearing archived products from cart upon /addTutorial', async () => {})
