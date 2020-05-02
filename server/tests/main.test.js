@@ -1084,8 +1084,12 @@ test('/refreshCart', async () => {
 // Cart /clearCart
 test('/clear', async () => {
 	// User adds 5 tutorials to cart
-	// Clear cart
+	// User two adds 2 tutorials
+	// User clears cart
 	// User has 0 tutorials in cart
+	// User two still has 2 tutorials
+
+	await registerNewUser({ user: userTwo, status: 201 })
 
 	// Create an admin account with specified email
 	await createAdminAccount({ status: 201 })
@@ -1152,6 +1156,18 @@ test('/clear', async () => {
 		tutorialId: fifth.id,
 	})
 
+	await addTutorialToCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: fourth.id,
+	})
+
+	await addTutorialToCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: fifth.id,
+	})
+
 	// Hit /clearCart API
 	await clearCart({ token: userOne.token, status: 200 })
 
@@ -1167,6 +1183,20 @@ test('/clear', async () => {
 		.where({ user_id: userOne.id })
 
 	expect(tutorialsInCart.length).toBe(0)
+
+	// User two still has 2 tutorials
+	const tutorialsInCartUserTwo = await Tutorial.query()
+		.select(
+			'tutorials.id',
+			'tutorials.name',
+			'tutorials.description',
+			'tutorials.price',
+			'tutorials.archived'
+		)
+		.joinRelation('cart_tutorials')
+		.where({ user_id: userTwo.id })
+
+	expect(tutorialsInCartUserTwo.length).toBe(2)
 })
 
 // Buy products from cart, /charge
