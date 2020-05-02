@@ -19,9 +19,6 @@ module.exports = async (req, res) => {
 
 		tutorial.archived = true
 
-		// Archive all bundles that have this tutorial
-		// Make sure to hit a confirmation API in FE first before hitting this one)
-
 		return res.json({ tutorial })
 	} catch (err) {
 		console.error(err)

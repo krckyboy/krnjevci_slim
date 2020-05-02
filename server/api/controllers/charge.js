@@ -5,7 +5,7 @@ const clearCartOfArchivedTutorials = require('../utils/clearCartOfArchivedTutori
 
 module.exports = async (req, res) => {
 	try {
-		// Fetch user's cart, tutorials and bundles
+		// Fetch user's cart, tutorials
 		const userCart = await Cart.query()
 			.findOne({ user_id: req.user.id })
 			.eager('tutorials')
@@ -13,9 +13,9 @@ module.exports = async (req, res) => {
 		const { tutorials } = userCart
 
 		// Check if there are archived tutorials and remove them from cart if that's true.
-		const archivedProducts = await clearCartOfArchivedTutorials(userCart)
+		const archivedTutorials = tutorials.filter((t) => t.archived)
 
-		if (archivedProducts) {
+		if (archivedTutorials.length > 0) {
 			return res.status(400).json({
 				msg: `Pronađeni su arhivirani artikli u korpi. Korpa je osvežena. Pokušajte ponovo!`,
 			})
@@ -49,12 +49,12 @@ module.exports = async (req, res) => {
 		// Clear user's cart
 		await userCart.$relatedQuery('tutorials').unrelate()
 
-		// Fetch user and already bought tutorials and bundles from before
+		// Fetch user and already bought tutorials from before
 		const user = await User.query()
 			.findOne({ id: req.user.id })
 			.eager('[bought_tutorials, cart.[tutorials]]')
 
-		// Combine old and new tutorials and bundles for upsert
+		// Combine old and new tutorials for upsert
 		const graphDataUser = {
 			...user,
 			bought_tutorials: [...tutorials, ...user.bought_tutorials],
@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
 			unrelate: ['cart', 'bought_tutorials'],
 		}
 
-		// If charged successfully: Relate tutorials to bought_tutorials and bundles bought_bundles (if bundle is bought, relate both bought_tutorials and bought_bundles)
+		// If charged successfully: Relate tutorials to bought_tutorials
 		await User.query().upsertGraphAndFetch(graphDataUser, optionsUser)
 
 		return res.status(200).json({ tutorials })

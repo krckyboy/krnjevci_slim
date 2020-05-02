@@ -70,41 +70,6 @@ const tutorial5 = {
 	description: 'The author of this composition is Dusan Todorovic Krnjevac',
 }
 
-const bundle1 = {
-	name: 'Rumunske pesme',
-	vimeo_id: '408197065',
-	price: 1000,
-	description: 'Hora Martisor i ostalo',
-}
-
-const bundle2 = {
-	name: 'Sumadija',
-	vimeo_id: '402640509',
-	price: 1000,
-	description: 'The author of this composition is Dusan Todorovic Krnjevac',
-}
-
-const bundle3 = {
-	name: 'Ciganija',
-	vimeo_id: '407271410',
-	price: 1000,
-	description: 'The author of this composition is Dusan Todorovic Krnjevac',
-}
-
-const bundle4 = {
-	name: 'Turski melos',
-	vimeo_id: '410448352',
-	price: 1000,
-	description: 'The author of this composition is Dusan Todorovic Krnjevac',
-}
-
-const bundle5 = {
-	name: 'Sevdalinke',
-	vimeo_id: '405862926',
-	price: 1000,
-	description: 'The author of this composition is Dusan Todorovic Krnjevac',
-}
-
 async function registerNewUser({ user, status = 201 }) {
 	const res = await request(app)
 		.post('/api/users')
@@ -145,21 +110,6 @@ async function createTutorial({ tutorial, status = 201, token }) {
 
 	if (res.body.tutorial) {
 		return res.body.tutorial
-	} else {
-		const errorObject = JSON.parse(res.error.text)
-		return errorObject
-	}
-}
-
-async function createBundle({ bundle, status = 201, token }) {
-	const res = await request(app)
-		.post(`/api/tutorials/bundle`)
-		.set('Authorization', `Bearer ${token}`)
-		.send({ ...bundle })
-		.expect(status)
-
-	if (res.body.bundle) {
-		return res.body.bundle
 	} else {
 		const errorObject = JSON.parse(res.error.text)
 		return errorObject
@@ -208,20 +158,6 @@ async function fetchTutorialById({ status = 200, token, id }) {
 	}
 }
 
-async function fetchBundleById({ status = 200, token, id }) {
-	const res = await request(app)
-		.get(`/api/tutorials/bundle/${id}`)
-		.set('Authorization', `Bearer ${token}`)
-		.expect(status)
-
-	if (res.body.bundle) {
-		return res.body.bundle
-	} else {
-		const errorObject = JSON.parse(res.error.text)
-		return errorObject
-	}
-}
-
 async function deleteTutorial({ tutorialId, token, status = 200 }) {
 	const res = await request(app)
 		.delete(`/api/tutorials/${tutorialId}`)
@@ -230,20 +166,6 @@ async function deleteTutorial({ tutorialId, token, status = 200 }) {
 
 	if (res.body.tutorial) {
 		return res.body.tutorial
-	} else {
-		const errorObject = JSON.parse(res.error.text)
-		return errorObject
-	}
-}
-
-async function deleteBundle({ bundleId, token, status = 200 }) {
-	const res = await request(app)
-		.delete(`/api/tutorials/bundle/${bundleId}`)
-		.set('Authorization', `Bearer ${token}`)
-		.expect(status)
-
-	if (res.body.bundle) {
-		return res.body.bundle
 	} else {
 		const errorObject = JSON.parse(res.error.text)
 		return errorObject
@@ -264,20 +186,6 @@ async function archiveTutorial({ tutorialId, token, status = 200 }) {
 	}
 }
 
-async function archiveBundle({ bundleId, token, status = 200 }) {
-	const res = await request(app)
-		.post(`/api/tutorials/archive/bundle/${bundleId}`)
-		.set('Authorization', `Bearer ${token}`)
-		.expect(status)
-
-	if (res.body.bundle) {
-		return res.body.bundle
-	} else {
-		const errorObject = JSON.parse(res.error.text)
-		return errorObject
-	}
-}
-
 async function fetchTutorialsPagination({ token, status = 200, start, end }) {
 	const res = await request(app)
 		.get(`/api/tutorials/?start=${start}&end=${end}`)
@@ -287,15 +195,6 @@ async function fetchTutorialsPagination({ token, status = 200, start, end }) {
 	return res.body.tutorials
 }
 
-async function fetchBundlesPagination({ token, status = 200, start, end }) {
-	const res = await request(app)
-		.get(`/api/tutorials/bundle/?start=${start}&end=${end}`)
-		.set('Authorization', `Bearer ${token}`)
-		.expect(status)
-
-	return res.body.bundles
-}
-
 async function searchTutorials({ status = 200, searchValue }) {
 	const res = await request(app)
 		.get('/api/tutorials/search')
@@ -303,15 +202,6 @@ async function searchTutorials({ status = 200, searchValue }) {
 		.send({ search: searchValue })
 
 	return res.body.tutorials
-}
-
-async function searchBundles({ status = 200, searchValue }) {
-	const res = await request(app)
-		.get('/api/tutorials/bundle/search')
-		.expect(status)
-		.send({ search: searchValue })
-
-	return res.body.bundles
 }
 
 async function charge({ status = 200, token, test = false }) {
@@ -343,20 +233,6 @@ async function addTutorialToCart({ tutorialId, token, status = 200 }) {
 	}
 }
 
-async function addBundleToCart({ bundleId, token, status = 200 }) {
-	const res = await request(app)
-		.post(`/api/cart/bundle/${bundleId}`)
-		.set('Authorization', `Bearer ${token}`)
-		.expect(status)
-
-	if (res.body.bundle) {
-		return res.body.bundle
-	} else {
-		const errorObject = JSON.parse(res.error.text)
-		return errorObject
-	}
-}
-
 async function removeTutorialFromCart({
 	tutorialId,
 	token,
@@ -371,20 +247,6 @@ async function removeTutorialFromCart({
 
 	if (res.body.tutorial) {
 		return res.body.tutorial
-	} else {
-		const errorObject = JSON.parse(res.error.text)
-		return errorObject
-	}
-}
-
-async function removeBundleFromCart({ bundleId, token, status = 200 }) {
-	const res = await request(app)
-		.delete(`/api/cart/bundle/${bundleId}`)
-		.set('Authorization', `Bearer ${token}`)
-		.expect(status)
-
-	if (res.body.bundle) {
-		return res.body.bundle
 	} else {
 		const errorObject = JSON.parse(res.error.text)
 		return errorObject
@@ -439,19 +301,6 @@ async function fetchBoughtTutorials({
 		return errorObject
 	}
 }
-async function fetchBundlesOfTutorial({ token, status = 200, tutorialId }) {
-	const res = await request(app)
-		.get(`/api/tutorials/fetchBundlesOfTutorial/${tutorialId}`)
-		.set('Authorization', `Bearer ${token}`)
-		.expect(status)
-
-	if (res.body.bundles) {
-		return res.body.bundles
-	} else {
-		const errorObject = JSON.parse(res.error.text)
-		return errorObject
-	}
-}
 
 async function refreshCart({ token, status = 200 }) {
 	const res = await request(app)
@@ -477,35 +326,21 @@ module.exports = {
 	tutorial3,
 	tutorial4,
 	tutorial5,
-	bundle1,
-	bundle2,
-	bundle3,
-	bundle4,
-	bundle5,
 	registerNewUser,
 	login,
-	removeBundleFromCart,
 	createTutorial,
 	createAdminAccount,
 	compareValues,
 	fetchTutorialById,
 	deleteTutorial,
 	archiveTutorial,
-	createBundle,
 	fetchTutorialsPagination,
-	fetchBundleById,
-	fetchBundlesPagination,
-	archiveBundle,
-	deleteBundle,
 	searchTutorials,
-	searchBundles,
 	charge,
 	addTutorialToCart,
 	removeTutorialFromCart,
 	getAllProductsFromCart,
 	clearCart,
-	addBundleToCart,
 	fetchBoughtTutorials,
-	fetchBundlesOfTutorial,
 	refreshCart,
 }

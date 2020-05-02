@@ -1,6 +1,5 @@
 const Tutorial = require('../../../db/models/Tutorial')
 const Cart = require('../../../db/models/Cart')
-const clearCartOfArchivedTutorialsAndBundles = require('../../utils/clearCartOfArchivedTutorials')
 
 module.exports = async (req, res) => {
 	try {

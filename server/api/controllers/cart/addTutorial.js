@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
 			return res.status(404).json({ msg: `Artikl ne postoji!` })
 		}
 
-		// Fetch user's cart, tutorials and bundles
+		// Fetch user's cart, tutorials
 		const userCart = await Cart.query()
 			.findOne({ user_id: req.user.id })
 			.eager('tutorials')

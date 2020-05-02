@@ -19,25 +19,12 @@ const {
 	deleteTutorial,
 	archiveTutorial,
 	fetchTutorialsPagination,
-	createBundle,
-	bundle1,
-	bundle2,
-	fetchBundleById,
-	fetchBundlesPagination,
-	archiveBundle,
-	bundle3,
-	bundle4,
-	bundle5,
-	deleteBundle,
 	searchTutorials,
-	searchBundles,
 	charge,
 	addTutorialToCart,
 	removeTutorialFromCart,
-	removeBundleFromCart,
 	getAllProductsFromCart,
 	clearCart,
-	addBundleToCart,
 	fetchBoughtTutorials,
 	refreshCart,
 } = require('./utils')
@@ -1199,9 +1186,21 @@ test('/clear', async () => {
 	expect(tutorialsInCartUserTwo.length).toBe(2)
 })
 
-// Buy products from cart, /charge
-// That check could be an API + function that runs when the user clicks on enter card details and that function can be repeated - function returning list of products and total price
-test('Buy products from cart', async () => {})
+// In FE, make sure to hit /refreshCart as a validation before redirecting to this API / page for purchase
+test('/charge', async () => {
+	// 400 if archived tutorials found, but don’t update cart, leave that to /refreshCart
+	// Check if bought tutorials are unique to individual users
+	// Check if cart is empty after purchase
+	// User one adds 1, 2, 3 to cart
+	// User two adds 3, 4
+	// Admin archives 4
+	// User one successfully buys 1, 2, 3
+	// User two gets 400 since tutorial 4 is archived
+	// User two tries to purchase once again, but gets 400 again
+	// User two refreshes cart and then successfully makes the purchase
+	// User one fetches bought tutorials, has 1, 2, 3
+	// User two fetches bought tutorials, has 3
+})
 
 test('Clearing archived products from cart upon /addTutorial', async () => {})
 
