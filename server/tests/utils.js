@@ -357,11 +357,17 @@ async function addBundleToCart({ bundleId, token, status = 200 }) {
 	}
 }
 
-async function removeTutorialFromCart({ tutorialId, token, status = 200 }) {
+async function removeTutorialFromCart({
+	tutorialId,
+	token,
+	status = 200,
+	test,
+}) {
 	const res = await request(app)
 		.delete(`/api/cart/tutorial/${tutorialId}`)
 		.set('Authorization', `Bearer ${token}`)
 		.expect(status)
+		.send({ test })
 
 	if (res.body.tutorial) {
 		return res.body.tutorial

@@ -569,12 +569,18 @@ test('/addTutorial', async () => {
 	})
 
 	expect(userTwoCartProducts.products.tutorials.total).toBe(2)
-	expect(userTwoCartProducts.products.tutorials.results[0].id).toBe(first.id)
-	expect(userTwoCartProducts.products.tutorials.results[1].id).toBe(second.id)
+	const userTwoCartProductsIds = userTwoCartProducts.products.tutorials.results.map(
+		(t) => t.id
+	)
+	expect(userTwoCartProductsIds.includes(first.id)).toBe(true)
+	expect(userTwoCartProductsIds.includes(second.id)).toBe(true)
 
+	const userThreeCartProductsIds = userThreeCartProducts.products.tutorials.results.map(
+		(t) => t.id
+	)
 	expect(userThreeCartProducts.products.tutorials.total).toBe(2)
-	expect(userThreeCartProducts.products.tutorials.results[0].id).toBe(second.id)
-	expect(userThreeCartProducts.products.tutorials.results[1].id).toBe(fourth.id)
+	expect(userThreeCartProductsIds.includes(second.id)).toBe(true)
+	expect(userThreeCartProductsIds.includes(fourth.id)).toBe(true)
 
 	// User two and three make the purchase
 	await charge({
@@ -618,6 +624,190 @@ test('/addTutorial', async () => {
 
 	expect(userThreeBoughtTutorialsIds.includes(second.id))
 	expect(userThreeBoughtTutorialsIds.includes(fourth.id))
+})
+
+test('/removeTutorial', async () => {
+	// 404 if not exist
+	// 404 if not added to cart
+	// Check if carts are unique to individual users
+
+	await createAdminAccount({ status: 201 })
+
+	await registerNewUser({
+		user: userTwo,
+		status: 201,
+	})
+
+	// Create 5 tutorials
+	const first = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial1 },
+	})
+
+	const second = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial2 },
+	})
+
+	const third = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial3 },
+	})
+
+	const fourth = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial4 },
+	})
+
+	const fifth = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial5 },
+	})
+
+	// User one adds 1, 2, 3 tutorials
+	// User two adds 3, 4, 5
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: first.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: second.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: third.id,
+	})
+
+	await addTutorialToCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: third.id,
+	})
+
+	await addTutorialToCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: fourth.id,
+	})
+
+	await addTutorialToCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: fifth.id,
+	})
+
+	// User one removes 3, has only 1, 2 in cart
+	// User two removes 5, has only 3, 4 in cart
+	await removeTutorialFromCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: third.id,
+	})
+
+	await removeTutorialFromCart({
+		token: userTwo.token,
+		status: 200,
+		tutorialId: fifth.id,
+	})
+
+	// Fetch user one's cart, make sure it's 2, tutorial 1 and 2
+	const userOneCartProducts = await getAllProductsFromCart({
+		token: userOne.token,
+		status: 200,
+	})
+
+	// There are 2 tutorials in cart
+	expect(userOneCartProducts.products.tutorials.total).toBe(2)
+	const userOneTutorialIds = userOneCartProducts.products.tutorials.results.map(
+		(t) => t.id
+	)
+	expect(userOneTutorialIds.includes(first.id)).toBe(true)
+	expect(userOneTutorialIds.includes(second.id)).toBe(true)
+
+	// Fetch user two's cart, make sure it's 2, tutorial 3 and 4
+	const userTwoCartProducts = await getAllProductsFromCart({
+		token: userTwo.token,
+		status: 200,
+	})
+
+	// There are 2 tutorials in cart
+	expect(userTwoCartProducts.products.tutorials.total).toBe(2)
+	const userTwoTutorialIds = userTwoCartProducts.products.tutorials.results.map(
+		(t) => t.id
+	)
+	expect(userTwoTutorialIds.includes(third.id)).toBe(true)
+	expect(userTwoTutorialIds.includes(fourth.id)).toBe(true)
+
+	// User one: 1, 2
+	// User two: 3, 4
+
+	// Admin archives tutorial 2
+	// User one has tutorial 1, 2
+	// User one can successfully remove tutorial 2 even if it's archived
+	// User two has tutorial 3, 4
+	await archiveTutorial({
+		status: 200,
+		token: adminUser.token,
+		tutorialId: second.id,
+	})
+
+	await removeTutorialFromCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: second.id,
+		test: true,
+	})
+
+	// Fetch user one's cart
+	const userOneCartProductsSecond = await getAllProductsFromCart({
+		token: userOne.token,
+		status: 200,
+	})
+
+	// There are 2 tutorials in cart
+	expect(userOneCartProductsSecond.products.tutorials.total).toBe(1)
+	expect(userOneCartProductsSecond.products.tutorials.results[0].id).toBe(
+		first.id
+	)
+
+	// Fetch user two's cart, make sure it's 2, tutorial 3 and 4
+	const userTwoCartProductsSecond = await getAllProductsFromCart({
+		token: userTwo.token,
+		status: 200,
+	})
+
+	// There are 2 tutorials in cart
+	expect(userTwoCartProductsSecond.products.tutorials.total).toBe(2)
+	const userTwoTutorialIdsSecond = userTwoCartProductsSecond.products.tutorials.results.map(
+		(t) => t.id
+	)
+	expect(userTwoTutorialIdsSecond.includes(third.id)).toBe(true)
+	expect(userTwoTutorialIdsSecond.includes(fourth.id)).toBe(true)
+
+	// User one gets 404 when trying to remove a tutorial that doesn't exist
+	// User one gets 404 when trying to remove a tutorial he didn't add to cart
+	await removeTutorialFromCart({
+		token: userOne.token,
+		status: 404,
+		tutorialId: 8888888,
+	})
+
+	await removeTutorialFromCart({
+		token: userOne.token,
+		status: 404,
+		tutorialId: fifth.id,
+	})
 })
 
 // Buy products from cart, /charge
