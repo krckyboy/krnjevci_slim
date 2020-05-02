@@ -39,6 +39,7 @@ const {
 	clearCart,
 	addBundleToCart,
 	fetchBoughtTutorials,
+	refreshCart,
 } = require('./utils')
 
 const User = require('../db/models/User')
@@ -821,6 +822,7 @@ test('/getAllProducts', async () => {
 	// User archives tutorial 5
 	// User has 4 tutorials, excluding tutorial 5
 	// Pagination works, fetching latest 2
+
 	// Create an admin account with specified email
 	await createAdminAccount({ status: 201 })
 
@@ -916,6 +918,116 @@ test('/getAllProducts', async () => {
 
 	expect(userOneCartProductsOnly2.products.tutorials.total).toBe(4)
 	expect(userOneCartProductsOnly2.products.tutorials.results.length).toBe(2)
+})
+
+// Cart /refreshCart
+test('/refreshCart', async () => {
+	// The same as /getAllProducts but without hitting /getAllProducts
+	// Tests are performed through objectionjs query
+
+	// User adds 5 tutorials to cart
+	// User archives tutorial 4, 5
+	// /refreshCart gets hit
+	// User has 3 tutorials, excluding tutorial 4, 5
+
+	// Create an admin account with specified email
+	await createAdminAccount({ status: 201 })
+
+	// Create 5 tutorials
+	const first = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial1 },
+	})
+
+	const second = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial2 },
+	})
+
+	const third = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial3 },
+	})
+
+	const fourth = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial4 },
+	})
+
+	const fifth = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial5 },
+	})
+
+	// Add 2 tutorials to cart
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: first.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: second.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: third.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: fourth.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: fifth.id,
+	})
+
+	await archiveTutorial({
+		status: 200,
+		token: adminUser.token,
+		tutorialId: fourth.id,
+	})
+
+	await archiveTutorial({
+		status: 200,
+		token: adminUser.token,
+		tutorialId: fifth.id,
+	})
+
+	// Hit /refreshCart API
+	await refreshCart({ token: userOne.token, status: 200 })
+
+	const tutorialsInCart = await Tutorial.query()
+		.select(
+			'tutorials.id',
+			'tutorials.name',
+			'tutorials.description',
+			'tutorials.price',
+			'tutorials.archived'
+		)
+		.joinRelation('cart_tutorials')
+		.where({ user_id: userOne.id })
+
+	const tutorialsInCartIds = tutorialsInCart.map((t) => t.id)
+
+	expect(tutorialsInCartIds.includes(first.id)).toBe(true)
+	expect(tutorialsInCartIds.includes(second.id)).toBe(true)
+	expect(tutorialsInCartIds.includes(third.id)).toBe(true)
+	expect(tutorialsInCartIds.includes(fourth.id)).toBe(false)
+	expect(tutorialsInCartIds.includes(fifth.id)).toBe(false)
 })
 
 // Buy products from cart, /charge

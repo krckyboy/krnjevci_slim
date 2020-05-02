@@ -29,6 +29,6 @@ router.get('/', [auth], require('../controllers/cart/getAllProducts'))
 // POST /api/cart/refreshCart
 // Refresh cart, clearing conflicted and archived tutorials
 // Private
-router.post('/refreshCart', [auth], require('../controllers/cart/refreshCart'))
+router.post('/refresh_cart', [auth], require('../controllers/cart/refreshCart'))
 
 module.exports = router

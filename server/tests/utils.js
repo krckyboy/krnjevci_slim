@@ -453,6 +453,20 @@ async function fetchBundlesOfTutorial({ token, status = 200, tutorialId }) {
 	}
 }
 
+async function refreshCart({ token, status = 200 }) {
+	const res = await request(app)
+		.post(`/api/cart/refresh_cart`)
+		.set('Authorization', `Bearer ${token}`)
+		.expect(status)
+
+	if (res.body) {
+		return res.body
+	} else {
+		const errorObject = JSON.parse(res.error.text)
+		return errorObject
+	}
+}
+
 module.exports = {
 	userOne,
 	userTwo,
@@ -493,4 +507,5 @@ module.exports = {
 	addBundleToCart,
 	fetchBoughtTutorials,
 	fetchBundlesOfTutorial,
+	refreshCart,
 }
