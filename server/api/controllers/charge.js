@@ -1,7 +1,6 @@
 const Purchase = require('../../db/models/Purchase')
 const Cart = require('../../db/models/Cart')
 const User = require('../../db/models/User')
-const clearCartOfArchivedTutorials = require('../utils/clearCartOfArchivedTutorials')
 
 module.exports = async (req, res) => {
 	try {
