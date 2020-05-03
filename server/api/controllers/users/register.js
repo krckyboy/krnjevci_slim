@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
 				if (user.email === email) {
 					return res
 						.status(400)
-						.json({ msg: 'User already exists with that email!' })
+						.json({ msg: 'Već postoji nalog sa tim email-om!' })
 				}
 			}
 		}

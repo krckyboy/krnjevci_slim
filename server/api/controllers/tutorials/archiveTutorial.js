@@ -6,11 +6,11 @@ module.exports = async (req, res) => {
 		const tutorial = await Tutorial.query().findOne({ id: paramsId })
 
 		if (!tutorial) {
-			return res.status(404).json({ msg: 'No tutorial found!' })
+			return res.status(404).json({ msg: 'Tutorijal ne postoji!' })
 		}
 
 		if (tutorial.archived) {
-			return res.status(400).json({ msg: 'Tutorial already archived!' })
+			return res.status(400).json({ msg: 'Tutorijal je već arhiviran!' })
 		}
 
 		await tutorial.$query().update({

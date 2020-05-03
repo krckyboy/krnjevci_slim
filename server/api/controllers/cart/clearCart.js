@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 		const { tutorials } = userCart
 
 		if (tutorials.length === 0) {
-			return res.status(400).json({ msg: 'Cart is already empty!' })
+			return res.status(400).json({ msg: `Korpa je već prazna!` })
 		}
 
 		await userCart.$relatedQuery('tutorials').unrelate()

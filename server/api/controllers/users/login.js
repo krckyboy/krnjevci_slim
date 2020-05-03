@@ -15,13 +15,17 @@ module.exports = async (req, res) => {
 		const user = await User.query().findOne({ email })
 
 		if (!user) {
-			return res.status(400).json({ msg: 'Invalid credentials!' })
+			return res
+				.status(400)
+				.json({ msg: 'Uneti podaci se ne poklapaju sa bazom podataka!' })
 		}
 
 		const passwordsMatch = await bcrypt.compare(password, user.password)
 
 		if (!passwordsMatch) {
-			return res.status(400).json({ msg: 'Invalid credentials!' })
+			return res
+				.status(400)
+				.json({ msg: 'Uneti podaci se ne poklapaju sa bazom podataka!' })
 		}
 
 		const token = generateAuthToken(user.id)

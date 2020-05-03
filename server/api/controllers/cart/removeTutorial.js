@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
 			.select('id', 'name', 'description', 'price', 'archived')
 
 		if (!tutorial) {
-			return res.status(404).json({ msg: `Tutorial doesn't exist!` })
+			return res.status(404).json({ msg: `Tutorijal ne postoji!` })
 		}
 
 		const userCart = await Cart.query()
@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
 		if (!tutorialAlreadyAdded) {
 			return res
 				.status(404)
-				.json({ msg: `You don't have that tutorial in cart!` })
+				.json({ msg: `Nemate taj tutorijal u korpi!` })
 		}
 
 		await userCart

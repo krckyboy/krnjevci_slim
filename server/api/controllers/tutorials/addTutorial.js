@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
 		if (existingTutorial) {
 			return res
 				.status(400)
-				.json({ msg: 'There is already a tutorial under that name!' })
+				.json({ msg: 'Već postoji tutorijal sa takvim imenom!' })
 		}
 
 		// Create tutorial

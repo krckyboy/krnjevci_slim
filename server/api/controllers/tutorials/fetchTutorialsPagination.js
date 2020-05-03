@@ -42,9 +42,7 @@ module.exports = async (req, res) => {
 				if (error) {
 					// Return status code 404
 					console.error(error)
-					return res
-						.status(404)
-						.json({ msg: `The requested video couldn't be found!` })
+					return res.status(404).json({ msg: `Nije pronađen tutorijal!` })
 				}
 
 				// Return only one array of tutorials (tutorials from db and the ones from vimeo destructured into one)

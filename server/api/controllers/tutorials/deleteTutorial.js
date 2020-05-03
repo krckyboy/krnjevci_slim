@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
 		const tutorial = await Tutorial.query().findOne({ id: paramsId })
 
 		if (!tutorial) {
-			return res.status(404).json({ msg: 'No tutorial found!' })
+			return res.status(404).json({ msg: 'Tutorijal ne postoji!' })
 		}
 
 		await tutorial.$query().delete()

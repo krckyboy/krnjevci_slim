@@ -8,7 +8,7 @@ const auth = async function (req, res, next) {
 		const token = req.header('Authorization').replace('Bearer ', '')
 
 		if (!token) {
-			return res.status(401).json({ msg: 'No token, authorization denied' })
+			return res.status(401).json({ msg: 'Nemate token, pristup onemogućen!' })
 		}
 
 		const decoded = jwt.verify(token, process.env.JWT_SECRET)
@@ -16,14 +16,16 @@ const auth = async function (req, res, next) {
 		const user = await User.query().findById(decoded.user.id)
 
 		if (!user) {
-			return res.status(401).json({ msg: 'Token is not valid' })
+			return res
+				.status(401)
+				.json({ msg: 'Token nije ispravan, pristup onemogućen!' })
 		}
 
 		req.user = user
 
 		next()
 	} catch (err) {
-		res.status(401).json({ msg: 'Token is not valid' })
+		res.status(401).json({ msg: 'Token nije ispravan, pristup onemogućen!' })
 	}
 }
 

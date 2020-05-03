@@ -97,14 +97,18 @@ test('Login [200, 2x 400], fetch current user', async () => {
 		},
 		status: 400,
 	})
-	expect(responseLoginFail.msg).toBe('Invalid credentials!')
+	expect(responseLoginFail.msg).toBe(
+		'Uneti podaci se ne poklapaju sa bazom podataka!'
+	)
 
 	// When password doesn't match, return 400
 	const responseLoginFail2 = await login({
 		user: { email: userOne.email, password: 'invalidPassword' },
 		status: 400,
 	})
-	expect(responseLoginFail2.msg).toBe('Invalid credentials!')
+	expect(responseLoginFail2.msg).toBe(
+		'Uneti podaci se ne poklapaju sa bazom podataka!'
+	)
 })
 
 test('Delete user', async () => {
@@ -154,7 +158,7 @@ test('Add a tutorial, check if admin auth works', async () => {
 		token: userOne.token,
 		tutorial: { ...tutorial2 },
 	})
-	expect(errorText.msg).toBe('No admin privileges, access denied!')
+	expect(errorText.msg).toBe('Pristup onemogućen!')
 
 	// Admin tries to create a tutorial with the same name, fails
 	const duplicateTutorialMessage = await createTutorial({
@@ -163,7 +167,7 @@ test('Add a tutorial, check if admin auth works', async () => {
 		tutorial: { ...tutorial1 },
 	})
 	expect(duplicateTutorialMessage.msg).toBe(
-		'There is already a tutorial under that name!'
+		'Već postoji tutorijal sa takvim imenom!'
 	)
 })
 

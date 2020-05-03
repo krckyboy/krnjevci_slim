@@ -1,8 +1,6 @@
 // Check if there are archived products in cart and remove if there are. Function returns an object containing archived tutorials.
 
-module.exports = async function clearCartOfArchivedTutorials(
-	userCart
-) {
+module.exports = async function clearCartOfArchivedTutorials(userCart) {
 	// Check if any tutorials are archived, clear them from cart and return the archived tuts
 	const { tutorials } = userCart
 
@@ -27,7 +25,7 @@ module.exports = async function clearCartOfArchivedTutorials(
 	}
 
 	if (archivedProducts.tutorials.length > 0) {
-		return archivedProducts
+		return `Korpa je osvežena! Arhivirani artikli su uklonjeni!`
 	}
 
 	return null
