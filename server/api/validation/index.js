@@ -1,36 +1,27 @@
 const { check } = require('express-validator/check')
 
 const registerUserValidation = [
-	check(
-		'password',
-		'Please enter a password with 6 or more characters!'
-	).isLength({ min: 6 }),
-	check('email', 'Please include a valid email!').isEmail(),
+	check('password', 'Unesite lozinku sa više od 5 karaktera!').isLength({
+		min: 6,
+	}),
+	check('email', 'Molimo Vas unesite validnu email adresu!').isEmail(),
 ]
 
 const loginUserValidation = [
-	check('password', 'Password is required!').exists(),
-	check('email', 'Please include a valid email!').isEmail(),
+	check('password', 'Lozinka je neophodna!').exists(),
+	check('email', 'Molimo Vas unesite validnu email adresu!').isEmail(),
 ]
 
 createTutorialValidation = [
-	check('name', 'Name is required!').exists(),
-	check('vimeo_id', 'URL for preview is required!').exists(),
-	check('vimeo_preview_id', 'URL for preview is required!').exists(),
-	check('price', 'Price is required!').exists().isNumeric(),
-	check('description', 'Description is required!').exists(),
-]
-
-createTutorialBundleValidation = [
-	check('name', 'Name is required!').exists(),
-	check('url', 'URL is required!').exists(),
-	check('price', 'Price is required!').exists().isNumeric(),
-	check('description', 'Description is required!').exists(),
+	check('name', 'Ime je neophodno!').exists(),
+	check('vimeo_id', 'ID tutorijala je neophodan!').exists(),
+	check('vimeo_preview_id', 'ID za pregled tutorijala je neophodan!').exists(),
+	check('price', 'Cena je neophodna!').exists().isNumeric(),
+	check('description', 'Opis je neophodan!').exists(),
 ]
 
 module.exports = {
 	registerUserValidation,
 	loginUserValidation,
 	createTutorialValidation,
-	createTutorialBundleValidation,
 }
