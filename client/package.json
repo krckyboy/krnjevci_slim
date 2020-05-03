@@ -20,5 +20,6 @@
   },
   "keywords": [],
   "author": "Dusan Todorovic Krnjevac (Krcky)",
-  "license": "ISC"
+  "license": "ISC",
+  "proxy": "http://localhost:5000"
 }
