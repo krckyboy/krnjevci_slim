@@ -49,7 +49,6 @@ afterAll(async () => {
 	await Purchase.query().delete()
 })
 
-// @todo Check if validation works correctly
 test('Registration [201, 400]', async () => {
 	const newUser = {
 		email: 'dusan@gmail.com',
@@ -69,6 +68,16 @@ test('Registration [201, 400]', async () => {
 	expect(fetchedUser.password).not.toBe(newUser.password)
 
 	await registerNewUser({ user: userOne, status: 400 })
+
+	const validationFail = await registerNewUser({
+		user: {
+			email: 'userone@com',
+			password: null,
+		},
+		status: 400,
+	})
+
+	expect(validationFail.errors.length).toBe(2)
 })
 
 // @todo Check if validation works correctly
