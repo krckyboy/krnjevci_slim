@@ -411,6 +411,8 @@ test('Archive tutorial', async () => {
 
 // Search tutorials by name
 test('Search tutorials by name', async () => {
+	// Fetch only non archived
+
 	// Create an admin account with specified email
 	await createAdminAccount({ status: 201 })
 
@@ -457,6 +459,7 @@ test('Search tutorials by name', async () => {
 		token: adminUser.token,
 		tutorialId: first.id,
 	})
+
 	const searchResult3 = await searchTutorials({ searchValue: 'kolo' })
 	expect(searchResult3.length).toBe(2)
 })

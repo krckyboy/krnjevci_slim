@@ -1,10 +1,30 @@
 const Tutorial = require('../../../db/models/Tutorial')
+const { validationResult } = require('express-validator/check')
+const checkIfObjectValuesAreOfSpecificType = require('../../utils/checkIfArrayValuesAreOfSpecificType')
 
 module.exports = async (req, res) => {
-	// @todo Add validation
+	const errors = validationResult(req)
+
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() })
+	}
+
 	try {
-		// @todo Validate fields
 		const { name, vimeo_id, vimeo_preview_id, price, description } = req.body
+
+		const fieldsArr = [name, vimeo_id, vimeo_preview_id, description]
+		const checkIfString = checkIfObjectValuesAreOfSpecificType(
+			fieldsArr,
+			'string'
+		)
+
+		if (typeof el !== 'number') {
+			return res.status(400).json({ msg: 'Niste pravilno uneli polja!' })
+		}
+
+		if (!checkIfString) {
+			return res.status(400).json({ msg: 'Niste pravilno uneli polja!' })
+		}
 
 		// Check if tutorial with that name exists
 		const existingTutorial = await Tutorial.query().findOne({ name })
