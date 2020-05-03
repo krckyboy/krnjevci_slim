@@ -31,9 +31,11 @@ router.get(
 	require('../controllers/users/fetchCurrentUser')
 )
 
+/*
 // Delete /api/users
 // Delete logged user
 // Private
 router.delete('/', auth, require('../controllers/users/deleteCurrentUser'))
+*/
 
 module.exports = router

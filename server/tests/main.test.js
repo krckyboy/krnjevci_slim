@@ -27,6 +27,7 @@ const {
 	clearCart,
 	fetchBoughtTutorials,
 	refreshCart,
+	fetchCurrentUser,
 } = require('./utils')
 
 const User = require('../db/models/User')
@@ -126,6 +127,7 @@ test('Login [200, 2x 400], fetch current user', async () => {
 	expect(validationError.errors.length).toBe(2)
 })
 
+/*
 test('Delete user', async () => {
 	// User two registers
 	await registerNewUser({ user: userTwo, status: 201 })
@@ -141,6 +143,7 @@ test('Delete user', async () => {
 	expect(users.length).toBe(1)
 	expect(users[0].id).toBe(userTwo.id)
 })
+*/
 
 // Add a tutorial
 test('Add a tutorial, check if admin auth works', async () => {
@@ -1564,4 +1567,12 @@ test('/fetchBoughtTutorials', async () => {
 
 	expect(userTwoBoughtTutorials.tutorials.total).toBe(0)
 	expect(userTwoBoughtTutorials.tutorials.results.length).toBe(0)
+})
+
+test('/fetchCurrentUser', async () => {
+	const fetchedCurrentUser = await fetchCurrentUser({ token: userOne.token })
+
+	expect(fetchedCurrentUser.user.email).toBe(userOne.email)
+	expect(fetchedCurrentUser.user.is_admin).toBe(false)
+	expect(fetchedCurrentUser.user.id).toBe(userOne.id)
 })

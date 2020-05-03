@@ -101,6 +101,20 @@ async function login({ user, status = 200 }) {
 	}
 }
 
+async function fetchCurrentUser({ token, status = 200 }) {
+	const res = await request(app)
+		.get('/api/users/current_user')
+		.set('Authorization', `Bearer ${token}`)
+		.expect(status)
+
+	if (res.body) {
+		return res.body
+	} else {
+		const errorObject = JSON.parse(res.error.text)
+		return errorObject
+	}
+}
+
 async function createTutorial({ tutorial, status = 201, token }) {
 	const res = await request(app)
 		.post(`/api/tutorials`)
@@ -348,4 +362,5 @@ module.exports = {
 	clearCart,
 	fetchBoughtTutorials,
 	refreshCart,
+	fetchCurrentUser,
 }
