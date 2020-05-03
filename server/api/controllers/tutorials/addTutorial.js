@@ -13,12 +13,13 @@ module.exports = async (req, res) => {
 		const { name, vimeo_id, vimeo_preview_id, price, description } = req.body
 
 		const fieldsArr = [name, vimeo_id, vimeo_preview_id, description]
+
 		const checkIfString = checkIfObjectValuesAreOfSpecificType(
 			fieldsArr,
 			'string'
 		)
 
-		if (typeof el !== 'number') {
+		if (typeof price !== 'number') {
 			return res.status(400).json({ msg: 'Niste pravilno uneli polja!' })
 		}
 

@@ -15,8 +15,8 @@ const loginUserValidation = [
 
 createTutorialValidation = [
 	check('name', 'Name is required!').exists(),
-	check('url', 'URL is required!').exists(),
-	check('preview_url', 'URL for preview is required!').exists(),
+	check('vimeo_id', 'URL for preview is required!').exists(),
+	check('vimeo_preview_id', 'URL for preview is required!').exists(),
 	check('price', 'Price is required!').exists().isNumeric(),
 	check('description', 'Description is required!').exists(),
 ]
