@@ -80,7 +80,6 @@ test('Registration [201, 400]', async () => {
 	expect(validationFail.errors.length).toBe(2)
 })
 
-// @todo Check if validation works correctly
 test('Login [200, 2x 400], fetch current user', async () => {
 	// User one logins
 	const responseLoginSuccess = await login({ user: userOne })
@@ -118,6 +117,13 @@ test('Login [200, 2x 400], fetch current user', async () => {
 	expect(responseLoginFail2.msg).toBe(
 		'Uneti podaci se ne poklapaju sa bazom podataka!'
 	)
+
+	const validationError = await login({
+		user: { email: 'blabla', password: null },
+		status: 400,
+	})
+
+	expect(validationError.errors.length).toBe(2)
 })
 
 test('Delete user', async () => {

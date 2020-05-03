@@ -8,16 +8,31 @@ const registerUserValidation = [
 ]
 
 const loginUserValidation = [
-	check('password', 'Lozinka je neophodna!').exists(),
+	check('password', 'Lozinka je neophodna!').exists().isLength({
+		min: 1,
+	}),
 	check('email', 'Molimo Vas unesite validnu email adresu!').isEmail(),
 ]
 
 createTutorialValidation = [
-	check('name', 'Ime je neophodno!').exists(),
-	check('vimeo_id', 'ID tutorijala je neophodan!').exists(),
-	check('vimeo_preview_id', 'ID za pregled tutorijala je neophodan!').exists(),
-	check('price', 'Cena je neophodna!').exists().isNumeric(),
-	check('description', 'Opis je neophodan!').exists(),
+	check('name', 'Ime je neophodno!').exists().isLength({
+		min: 1,
+	}),
+
+	check('vimeo_id', 'ID tutorijala je neophodan!').exists().isLength({
+		min: 1,
+	}),
+	check('vimeo_preview_id', 'ID za pregled tutorijala je neophodan!')
+		.exists()
+		.isLength({
+			min: 1,
+		}),
+	check('price', 'Cena je neophodna!').exists().isNumeric().isLength({
+		min: 1,
+	}),
+	check('description', 'Opis je neophodan!').exists().isLength({
+		min: 1,
+	}),
 ]
 
 module.exports = {
