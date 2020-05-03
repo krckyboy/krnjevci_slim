@@ -1351,6 +1351,109 @@ test('/charge', async () => {
 	expect(userTwoBoughtTutorials.tutorials.results[0].id).toBe(third.id)
 })
 
-test('Clearing archived products from cart upon /addTutorial', async () => {})
+test('/fetchBoughtTutorials', async () => {
+	// Make sure to also get archived
+	// When fetching 0 bought, make sure it’s the same structure
+	// Make sure the pagination works
 
-// Fetch my tutorials (archived or not, doesn't matter)
+	// User buys t1 t2 t3
+	// Admin archives t3
+	// Fetch bought tutorials, total being 3, including the archived one
+	// Check pagination
+
+	// User two registers
+	// User two fetches bought tutorials, getting none
+
+	await createAdminAccount({ status: 201 })
+
+	const first = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial1 },
+	})
+
+	const second = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial2 },
+	})
+
+	const third = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial3 },
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: first.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: second.id,
+	})
+
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: third.id,
+	})
+
+	await charge({
+		status: 200,
+		token: userOne.token,
+	})
+
+	await archiveTutorial({
+		status: 200,
+		token: adminUser.token,
+		tutorialId: third.id,
+	})
+
+	const userOneBoughtTutorials = await fetchBoughtTutorials({
+		token: userOne.token,
+		status: 200,
+		test: true,
+	})
+
+	expect(userOneBoughtTutorials.tutorials.total).toBe(3)
+	const boughtTutorialsIds = userOneBoughtTutorials.tutorials.results.map(
+		(t) => t.id
+	)
+
+	expect(boughtTutorialsIds.includes(first.id)).toBe(true)
+	expect(boughtTutorialsIds.includes(second.id)).toBe(true)
+	expect(boughtTutorialsIds.includes(third.id)).toBe(true)
+
+	const archivedTut = userOneBoughtTutorials.tutorials.results.find(
+		(t) => t.archived
+	)
+
+	expect(archivedTut.id).toBe(third.id)
+	expect(archivedTut.archived).toBe(true)
+
+	const userOneBoughtTutorialsPag = await fetchBoughtTutorials({
+		token: userOne.token,
+		status: 200,
+		start: 0,
+		end: 1
+	})
+
+	expect(userOneBoughtTutorialsPag.tutorials.total).toBe(3)
+	expect(userOneBoughtTutorialsPag.tutorials.results.length).toBe(2)
+
+	await registerNewUser({ user: userTwo, status: 201 })
+
+	const userTwoBoughtTutorials = await fetchBoughtTutorials({
+		token: userTwo.token,
+		status: 200,
+		test: true,
+	})
+
+	expect(userTwoBoughtTutorials.tutorials.total).toBe(0)
+	expect(userTwoBoughtTutorials.tutorials.results.length).toBe(0)
+})
+

@@ -1,5 +1,4 @@
 const Tutorial = require('../../../db/models/Tutorial')
-const User = require('../../../db/models/User')
 const Vimeo = require('vimeo').Vimeo
 const client = new Vimeo(
 	process.env.VIMEO_CLIENT_IDENTIFIER,
@@ -26,18 +25,20 @@ module.exports = async (req, res) => {
 				'tutorials.name',
 				'tutorials.description',
 				'tutorials.price',
+				'tutorials.archived',
 				'tutorials.vimeo_id'
 			)
 			.range(start, end)
 			.where('users.id', req.user.id)
 
 		if (fetchedTutorials.total === 0) {
-			return res.status(200).json({ tutorials: [] })
+			return res.status(200).json({ tutorials: { results: [], total: 0 } })
 		}
 
+		// [ '/videos/405862926', '/videos/410448352', '/videos/407271410' ]
 		const tutorialUris = fetchedTutorials.results.map(
 			(t) => `/videos/${t.vimeo_id}`
-		) // [ '/videos/405862926', '/videos/410448352', '/videos/407271410' ]
+		)
 		const tutorialUrisString = tutorialUris.join(',') // /videos/405862926,/videos/410448352,/videos/407271410
 
 		client.request(
@@ -51,7 +52,7 @@ module.exports = async (req, res) => {
 					console.error(error)
 					return res
 						.status(404)
-						.json({ msg: `The requested video couldn't be found!` })
+						.json({ msg: `Došlo je do greške. Pokušajte ponovo.` })
 				}
 
 				// Return only one array of tutorials (tutorials from db and the ones from vimeo destructured into one)
