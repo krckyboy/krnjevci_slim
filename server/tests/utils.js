@@ -150,8 +150,8 @@ async function fetchTutorialById({ status = 200, token, id }) {
 		.set('Authorization', `Bearer ${token}`)
 		.expect(status)
 
-	if (res.body.tutorial) {
-		return res.body.tutorial
+	if (res.body) {
+		return res.body
 	} else {
 		const errorObject = JSON.parse(res.error.text)
 		return errorObject

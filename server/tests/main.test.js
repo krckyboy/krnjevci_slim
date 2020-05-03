@@ -167,28 +167,112 @@ test('Add a tutorial, check if admin auth works', async () => {
 	)
 })
 
-// #####################
 // Look into direct file links for protection
 test('Fetch a tutorial by id', async () => {
+	// If not exist, 404
+	// If archived, 404
+	// If not bought, pass preview_id
+	// If bought, pass vimeo_id
+	// If admin, get all info
+	// If admin, gets vimeo_id even if not bought
+	// FE: Check if you even need the vimeo code in this route (probably not)
+
+	// Admin creates 3 tutorials
+	// Admin archives tutorial #3
+	// User tries to fetch a tutorial that doesn't exist, gets 404
+	// User tries to fetch archived tutorial (t3), gets 404
+	// Admin can fetch archived
+	// Admin also automatically gets vimeo_id and preview_id
+	// User buys t2
+	// When fetching t2, he gets vimeo_id
+	// When fetching t1, he doesn't get vimeo_id, just preview
+
 	// Create an admin account with specified email
 	await createAdminAccount({ status: 201 })
 
-	// Create a tutorial
-	const createdTutorial = await createTutorial({
+	const first = await createTutorial({
 		status: 201,
 		token: adminUser.token,
 		tutorial: { ...tutorial1 },
 	})
 
-	// Fetch a tutorial as admin
-	const fetchedTutorial = await fetchTutorialById({
-		status: 200,
+	const second = await createTutorial({
+		status: 201,
 		token: adminUser.token,
-		id: createdTutorial.id,
+		tutorial: { ...tutorial2 },
 	})
 
-	// Check if the video is fetched correctly
-	expect(fetchedTutorial.uri).toBe(`/videos/${tutorial1.vimeo_id}`)
+	const third = await createTutorial({
+		status: 201,
+		token: adminUser.token,
+		tutorial: { ...tutorial3 },
+	})
+
+	await archiveTutorial({
+		tutorialId: third.id,
+		token: adminUser.token,
+		status: 200,
+	})
+
+	// User failing to get unexisted and archived project
+	await fetchTutorialById({
+		status: 404,
+		token: userOne.token,
+		id: 34636363,
+	})
+
+	await fetchTutorialById({
+		status: 404,
+		token: userOne.token,
+		id: third.id,
+	})
+
+	// Fetch archived tutorial (t3) as admin, successfully
+	const fetchedThirdAsAdmin = await fetchTutorialById({
+		status: 200,
+		token: adminUser.token,
+		id: third.id,
+	})
+
+	expect(fetchedThirdAsAdmin.userBoughtTutorial).toBe(true)
+	expect(fetchedThirdAsAdmin.tutorial.vimeo_id).toBe(third.vimeo_id)
+	expect(fetchedThirdAsAdmin.tutorial.vimeo_preview_id).toBe(
+		third.vimeo_preview_id
+	)
+
+	// User fetches t1, the one he didn't buy
+	const userFetchesNonbought = await fetchTutorialById({
+		status: 200,
+		token: userOne.token,
+		id: first.id,
+	})
+
+	expect(userFetchesNonbought.userBoughtTutorial).toBe(false)
+	expect(userFetchesNonbought.tutorial.vimeo_id).toBe(undefined)
+	expect(userFetchesNonbought.tutorial.vimeo_preview_id).toBe(
+		first.vimeo_preview_id
+	)
+
+	// User adds to cart t2
+	await addTutorialToCart({
+		token: userOne.token,
+		status: 200,
+		tutorialId: second.id,
+	})
+
+	await charge({ status: 200, token: userOne.token })
+
+	const userFetchesBought = await fetchTutorialById({
+		status: 200,
+		token: userOne.token,
+		id: second.id,
+	})
+
+	expect(userFetchesBought.userBoughtTutorial).toBe(true)
+	expect(userFetchesBought.tutorial.vimeo_id).toBe(second.vimeo_id)
+	expect(userFetchesBought.tutorial.vimeo_preview_id).toBe(
+		second.vimeo_preview_id
+	)
 
 	// @todo Check when you get Vimeo pro
 
@@ -1439,7 +1523,7 @@ test('/fetchBoughtTutorials', async () => {
 		token: userOne.token,
 		status: 200,
 		start: 0,
-		end: 1
+		end: 1,
 	})
 
 	expect(userOneBoughtTutorialsPag.tutorials.total).toBe(3)
@@ -1456,4 +1540,3 @@ test('/fetchBoughtTutorials', async () => {
 	expect(userTwoBoughtTutorials.tutorials.total).toBe(0)
 	expect(userTwoBoughtTutorials.tutorials.results.length).toBe(0)
 })
-
