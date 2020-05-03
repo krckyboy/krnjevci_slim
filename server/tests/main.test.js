@@ -287,6 +287,9 @@ test('Fetch a tutorial by id', async () => {
 
 // Fetch tutorials with pagination
 test('Fetch tutorials - with thumbnails, not URL', async () => {
+	// Fetch only non archived
+	// Check if pagination works as intended
+
 	// Create an admin account with specified email
 	await createAdminAccount({ status: 201 })
 

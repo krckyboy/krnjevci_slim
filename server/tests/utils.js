@@ -192,7 +192,12 @@ async function fetchTutorialsPagination({ token, status = 200, start, end }) {
 		.set('Authorization', `Bearer ${token}`)
 		.expect(status)
 
-	return res.body.tutorials
+	if (res.body) {
+		return res.body
+	} else {
+		const errorObject = JSON.parse(res.error.text)
+		return errorObject
+	}
 }
 
 async function searchTutorials({ status = 200, searchValue }) {

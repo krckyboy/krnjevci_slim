@@ -22,7 +22,13 @@ module.exports = async (req, res) => {
 			.whereNot({ archived: true })
 			.range(start, end)
 			.orderBy('created_at', 'desc')
-			.select('id', 'name', 'price', 'vimeo_id')
+			.select(
+				'tutorials.id',
+				'tutorials.name',
+				'tutorials.description',
+				'tutorials.price',
+				'tutorials.vimeo_id'
+			)
 
 		const tutorialUris = tutorials.results.map((t) => `/videos/${t.vimeo_id}`) // [ '/videos/405862926', '/videos/410448352', '/videos/407271410' ]
 		const tutorialUrisString = tutorialUris.join(',') // /videos/405862926,/videos/410448352,/videos/407271410
@@ -58,7 +64,7 @@ module.exports = async (req, res) => {
 					total: tutorials.total,
 				}
 
-				return res.status(200).json({ tutorials: tutorialsToReturn })
+				return res.status(200).json({ ...tutorialsToReturn })
 			}
 		)
 	} catch (err) {
