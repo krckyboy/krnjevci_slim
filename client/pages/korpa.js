@@ -3,6 +3,14 @@ import Button3 from '../components/buttons/Button3'
 import Heading4 from '../components/Heading4'
 import Heading3 from '../components/Heading3'
 import { demoTutorials } from '../fakeData'
+import { loadStripe } from '@stripe/stripe-js'
+import {
+	Elements,
+	CardElement,
+	useStripe,
+	useElements,
+} from '@stripe/react-stripe-js'
+import axios from 'axios'
 
 const Main = styled.main`
 	padding-top: 4.8rem;
@@ -101,6 +109,59 @@ const ClearTotalContainer = styled.div`
 	color: #333333;
 `
 
+const StripeForm = styled.form`
+	/* max-width: 400px; */
+	margin: 0 auto;
+`
+
+const CheckoutForm = () => {
+	const stripe = useStripe()
+	const elements = useElements()
+
+	const handleSubmit = async (e) => {
+		e.preventDefault()
+
+		const { error, paymentMethod } = await stripe.createPaymentMethod({
+			type: 'card',
+			card: elements.getElement(CardElement),
+		})
+
+		if (!error) {
+			// Fetch the ID of payment to send to BE
+			const { id } = paymentMethod
+
+			try {
+				const { data } = await axios.post('http://localhost:5000/api/test_charge', {
+					id,
+					amount: 1099, // You will fetch that in BE, not here
+				})
+				console.log(data)
+			} catch (error) {
+				console.error(error)
+			}
+		}
+	}
+
+	return (
+		<StripeForm onSubmit={handleSubmit}>
+			<CardElement />
+			<button type='submit' disabled={!stripe}>
+				Pay
+			</button>
+		</StripeForm>
+	)
+}
+
+const stripePromise = loadStripe('pk_test_E6KdYE9qvGgpWhUVSO4QhsJ000EIKyzjGe')
+
+const StripeEl = () => {
+	return (
+		<Elements stripe={stripePromise}>
+			<CheckoutForm />
+		</Elements>
+	)
+}
+
 export default () => {
 	return (
 		<Main className='content'>
@@ -129,6 +190,7 @@ export default () => {
 				</div>
 			</ClearTotalContainer>
 			<StyledButton>Plati</StyledButton>
+			<StripeEl />
 		</Main>
 	)
 }
