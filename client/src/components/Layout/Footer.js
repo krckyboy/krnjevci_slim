@@ -30,7 +30,7 @@ export default () => {
 		<StyledFooter className='footer'>
 			<p>
 				© 2020{' '}
-				<a href='https://krcky.dev/' target='_blank'>
+				<a href='https://krcky.dev/' target='_blank' rel='noopener noreferrer'>
 					<strong>Dušan Todorović Krnjevac (Krcky)</strong>
 				</a>{' '}
 			</p>

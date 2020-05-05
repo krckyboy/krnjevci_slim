@@ -62,7 +62,7 @@ body {
 	padding: 0;
 }
 
-#__next {
+#root {
 	display: flex;
 	flex-direction: column;
 	height: 100%;

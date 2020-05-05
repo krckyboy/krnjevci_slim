@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import Heading4 from '../components/Heading4'
-import FacebookButton from '../components/buttons/Facebook'
 import InputEmail from '../components/form/InputEmail'
 import InputPassword from '../components/form/InputPassword'
 import InputRepeatPassword from '../components/form/InputRepeatPassword'
@@ -61,18 +60,13 @@ const StyledButton = styled(Button3)`
 `
 
 const RegisterP = styled.p`
-    text-align: center;
+	text-align: center;
 `
 
 export default () => {
 	return (
 		<Main className='content'>
 			<Heading4 isCenter={true}>Registruj se</Heading4>
-			{ /*
-				<FacebookButton />
-				<Hr />
-				<Ili>ili unesite svoje podatke</Ili>
-			*/ }
 			<Form>
 				<InputEmail />
 				<InputPassword />
@@ -84,10 +78,7 @@ export default () => {
 				</LinkContainer>
 				<StyledButton>Registruj se</StyledButton>
 				<RegisterP>
-					Već imate nalog?{' '}
-					<Link href='/uloguj_se'>
-						<StyledLink>Ulogujte se</StyledLink>
-					</Link>
+					Već imate nalog? <StyledLink>Ulogujte se</StyledLink>
 				</RegisterP>
 			</Form>
 		</Main>

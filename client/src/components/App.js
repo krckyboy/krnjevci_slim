@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 // Pages
 import Home from '../pages/Home'
 import AboutUs from '../pages/AboutUs'
+import NotExist from '../pages/NotExist'
+import DevShortcutRoutes from '../pages/DevShortcutRoutes'
 
 // import AuthenticationProvider from '../contexts/authenticationContext'
 // import MessagesProvider from '../contexts/messagesContext'
@@ -42,6 +44,12 @@ function App() {
 					path={process.env.PUBLIC_URL + '/o_nama'}
 					component={AboutUs}
 				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/dev_shortcut_routes'}
+					component={DevShortcutRoutes}
+				/>
+				<Route component={NotExist} />
 			</Switch>
 		</Router>
 	)
