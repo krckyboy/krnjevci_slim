@@ -1,10 +1,11 @@
+import React from 'react'
 import styled from 'styled-components'
 import Heading4 from '../components/Heading4'
 import InputEmail from '../components/form/InputEmail'
 import InputPassword from '../components/form/InputPassword'
-import InputRepeatPassword from '../components/form/InputRepeatPassword'
-import Link from '../components/ActiveLink'
+import { Link } from 'react-router-dom'
 import Button3 from '../components/buttons/Button3'
+import Layout from '../components/Layout/Layout'
 
 const Main = styled.main`
 	padding-top: 4.8rem;
@@ -41,7 +42,7 @@ const Form = styled.form`
 	}
 `
 
-const StyledLink = styled.a`
+const StyledLink = styled(Link)`
 	font-weight: 600;
 	text-decoration: underline;
 	cursor: pointer;
@@ -65,22 +66,27 @@ const RegisterP = styled.p`
 
 export default () => {
 	return (
-		<Main className='content'>
-			<Heading4 isCenter={true}>Registruj se</Heading4>
-			<Form>
-				<InputEmail />
-				<InputPassword />
-				<InputRepeatPassword />
-				<LinkContainer>
-					<Link href='/'>
-						<StyledLink>Odredbe i uslovi koriščenja</StyledLink>
-					</Link>
-				</LinkContainer>
-				<StyledButton>Registruj se</StyledButton>
-				<RegisterP>
-					Već imate nalog? <StyledLink>Ulogujte se</StyledLink>
-				</RegisterP>
-			</Form>
-		</Main>
+		<Layout>
+			<Main className='content'>
+				<Heading4 isCenter={true}>Uloguj se</Heading4>
+				{/*
+			<FacebookButton />
+			<Hr />
+			<Ili>ili unesite svoje podatke</Ili>
+		*/}
+				<Form>
+					<InputEmail />
+					<InputPassword />
+					<LinkContainer>
+						<StyledLink to='/'>Zaboravljena lozinka?</StyledLink>
+					</LinkContainer>
+					<StyledButton>Uloguj se</StyledButton>
+					<RegisterP>
+						Nemate nalog?{' '}
+						<StyledLink to='/registruj_se'>Registrujte se</StyledLink>
+					</RegisterP>
+				</Form>
+			</Main>
+		</Layout>
 	)
 }

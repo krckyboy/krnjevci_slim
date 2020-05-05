@@ -7,6 +7,8 @@ import Home from '../pages/Home'
 import AboutUs from '../pages/AboutUs'
 import NotExist from '../pages/NotExist'
 import DevShortcutRoutes from '../pages/DevShortcutRoutes'
+import Login from '../pages/Login'
+import Register from '../pages/Register'
 
 // import AuthenticationProvider from '../contexts/authenticationContext'
 // import MessagesProvider from '../contexts/messagesContext'
@@ -48,6 +50,16 @@ function App() {
 					exact
 					path={process.env.PUBLIC_URL + '/dev_shortcut_routes'}
 					component={DevShortcutRoutes}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/uloguj_se'}
+					component={Login}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/registruj_se'}
+					component={Register}
 				/>
 				<Route component={NotExist} />
 			</Switch>
