@@ -1,0 +1,50 @@
+import React from 'react'
+import '../styles.css'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+
+// Pages
+import Home from '../pages/Home'
+import AboutUs from '../pages/AboutUs'
+
+// import AuthenticationProvider from '../contexts/authenticationContext'
+// import MessagesProvider from '../contexts/messagesContext'
+// import setAuthToken from '../utils/setAuthToken'
+
+// Set auth token if in local storage
+// if (localStorage.authentication) {
+// 	const parsedAuthentication = JSON.parse(
+// 		localStorage.getItem('authentication')
+// 	)
+
+// 	if (parsedAuthentication !== null && parsedAuthentication.token) {
+// 		setAuthToken(parsedAuthentication.token)
+// 	}
+// }
+
+/* 
+		<AuthenticationProvider>
+      <MessagesProvider>
+        ... <Router />
+      </MessagesProvider>
+		</AuthenticationProvider>
+*/
+
+function App() {
+	return (
+		<Router
+			onUpdate={() => window.scrollTo(0, 0)}
+			basename={process.env.PUBLIC_URL}
+		>
+			<Switch>
+				<Route exact path={process.env.PUBLIC_URL + '/'} component={Home} />
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/o_nama'}
+					component={AboutUs}
+				/>
+			</Switch>
+		</Router>
+	)
+}
+
+export default App
