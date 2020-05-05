@@ -12,7 +12,8 @@ import {
 	useElements,
 } from '@stripe/react-stripe-js'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import Layout from '../components/Layout/Layout'
 
 const Main = styled.main`
 	padding-top: 4.8rem;
@@ -166,33 +167,35 @@ const StripeEl = () => {
 
 export default () => {
 	return (
-		<Main className='content'>
-			<Heading4 isCenter={true}>Korpa</Heading4>
-			<Heading3 style={{ marginBottom: '3.2rem' }}>Pregled artikala</Heading3>
-			<ArticleContainer>
-				{demoTutorials.map((t) => (
-					<div className='item' key={t.id}>
-						<div className='top'>
-							<Link>{t.title}</Link>
-							<div>
-								<span>{t.price}RSD</span>
-								<img src='/images/svg/delete.svg' alt='Delete' />
+		<Layout>
+			<Main className='content'>
+				<Heading4 isCenter={true}>Korpa</Heading4>
+				<Heading3 style={{ marginBottom: '3.2rem' }}>Pregled artikala</Heading3>
+				<ArticleContainer>
+					{demoTutorials.map((t) => (
+						<div className='item' key={t.id}>
+							<div className='top'>
+								<Link to={`/tutorijal/${t.id}`}>{t.title}</Link>
+								<div>
+									<span>{t.price}RSD</span>
+									<img src='/images/svg/delete.svg' alt='Delete' />
+								</div>
 							</div>
+							{t.description && <p className='description'>{t.description}</p>}
 						</div>
-						{t.description && <p className='description'>{t.description}</p>}
+					))}
+				</ArticleContainer>
+				<ClearTotalContainer>
+					<ResetCart href='#' className='resetCart'>
+						Isprazni korpu
+					</ResetCart>
+					<div>
+						<span>Ukupno: 3500RSD</span>
 					</div>
-				))}
-			</ArticleContainer>
-			<ClearTotalContainer>
-				<ResetCart href='#' className='resetCart'>
-					Isprazni korpu
-				</ResetCart>
-				<div>
-					<span>Ukupno: 3500RSD</span>
-				</div>
-			</ClearTotalContainer>
-			<StyledButton>Plati</StyledButton>
-			<StripeEl />
-		</Main>
+				</ClearTotalContainer>
+				<StyledButton>Plati</StyledButton>
+				<StripeEl />
+			</Main>
+		</Layout>
 	)
 }

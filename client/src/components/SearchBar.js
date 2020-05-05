@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import React from 'react'
 
 const SearchBarContainer = styled.div`
 	margin-bottom: 3.2rem;

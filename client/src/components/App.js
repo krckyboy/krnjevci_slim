@@ -10,6 +10,7 @@ import DevShortcutRoutes from '../pages/DevShortcutRoutes'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
 import Cart from '../pages/Cart'
+import MyTutorials from '../pages/MyTutorials'
 
 // import AuthenticationProvider from '../contexts/authenticationContext'
 // import MessagesProvider from '../contexts/messagesContext'
@@ -66,6 +67,11 @@ function App() {
 					exact
 					path={process.env.PUBLIC_URL + '/korpa'}
 					component={Cart}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/moji_tutorijali'}
+					component={MyTutorials}
 				/>
 				<Route component={NotExist} />
 			</Switch>
