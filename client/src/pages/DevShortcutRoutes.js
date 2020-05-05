@@ -33,9 +33,6 @@ export default () => {
 					<StyledLink to='/moj_nalog'>Moj nalog</StyledLink>
 					<StyledLink to='/istorija_kupovine'>Istorija kupovine</StyledLink>
 					<StyledLink to='dev/dodaj_tutorijal'>Dodaj tutorijal</StyledLink>
-					<StyledLink to='dev/napravi_paket_tutorijala'>
-						Napravi paket tutorijala
-					</StyledLink>
 					<StyledLink to='dev/izmeni_tutorijal'>Izmeni tutorijal</StyledLink>
 					<StyledLink to='/tutorijal'>Tutorijal</StyledLink>
 					<StyledLink to='/resetuj_lozinku'>Resetuj lozinku</StyledLink>

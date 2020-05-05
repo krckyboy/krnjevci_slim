@@ -1,8 +1,10 @@
+import React from 'react'
 import styled from 'styled-components'
 import Button3 from '../../components/buttons/Button3'
 import Heading4 from '../../components/Heading4'
 import ParentInput from '../../components/form/ParentInput'
 import TextArea from '../../components/form/TextArea'
+import Layout from '../../components/Layout/Layout'
 
 const Main = styled.main`
 	padding-top: 4.8rem;
@@ -49,35 +51,37 @@ const StyledTextArea = styled(TextArea)`
 
 export default () => {
 	return (
-		<Main className='content'>
-			<Heading4 isCenter={true}>Dodaj tutorijal</Heading4>
-			<form>
-				<FormEl>
-					<label htmlFor='name'>Naziv</label>
-					<StyledParentInput type='text' name='name' />
-				</FormEl>
-				<FormEl>
-					<label htmlFor='url'>URL</label>
-					<StyledParentInput type='text' name='url' />
-				</FormEl>
-				<FormEl>
-					<label htmlFor='urlPreview'>URL za preview</label>
-					<StyledParentInput type='text' name='urlPreview' />
-				</FormEl>
-				<FormEl>
-					<label htmlFor='price'>Cena</label>
-					<StyledParentInput type='number' name='price' />
-				</FormEl>
-				<FormEl>
-					<label htmlFor='description'>Opis</label>
-					<StyledTextArea
-						name='description'
-						cols='30'
-						rows='4'
-					></StyledTextArea>
-				</FormEl>
-				<StyledButton>Dodaj</StyledButton>
-			</form>
-		</Main>
+		<Layout>
+			<Main className='content'>
+				<Heading4 isCenter={true}>Dodaj tutorijal</Heading4>
+				<form>
+					<FormEl>
+						<label htmlFor='name'>Naziv</label>
+						<StyledParentInput type='text' name='name' />
+					</FormEl>
+					<FormEl>
+						<label htmlFor='url'>URL</label>
+						<StyledParentInput type='text' name='url' />
+					</FormEl>
+					<FormEl>
+						<label htmlFor='urlPreview'>URL za preview</label>
+						<StyledParentInput type='text' name='urlPreview' />
+					</FormEl>
+					<FormEl>
+						<label htmlFor='price'>Cena</label>
+						<StyledParentInput type='number' name='price' />
+					</FormEl>
+					<FormEl>
+						<label htmlFor='description'>Opis</label>
+						<StyledTextArea
+							name='description'
+							cols='30'
+							rows='4'
+						></StyledTextArea>
+					</FormEl>
+					<StyledButton>Dodaj</StyledButton>
+				</form>
+			</Main>
+		</Layout>
 	)
 }

@@ -1,5 +1,7 @@
+import React from 'react'
 import styled from 'styled-components'
 import Tutorial from '../components/tutorial/Tutorial'
+import Layout from '../components/Layout/Layout'
 
 const Main = styled.main`
 	padding-top: 4.8rem;
@@ -19,9 +21,10 @@ export default ({
 	description = 'Autor ove kompozicije je Aleksandar Todorović Krnjevac.',
 }) => {
 	return (
-		<Main className='content'>
-			{/* Premium / Bought */}
-			{/*
+		<Layout>
+			<Main className='content'>
+				{/* Premium / Bought */}
+				{/*
 				<Tutorial
 					price={price}
 					bought={bought}
@@ -31,8 +34,8 @@ export default ({
 				/>
 			*/}
 
-			{/* Premium / not bought */}
-			{ /*
+				{/* Premium / not bought */}
+				{/*
 				<Tutorial
 					price={2000}
 					bought={false}
@@ -40,10 +43,10 @@ export default ({
 					previewUrl={previewUrl}
 					videoUrl={videoUrl}
 				/>
-			*/ }
+			*/}
 
-			{/* Free / not bought */}
-			{ /*
+				{/* Free / not bought */}
+				{/*
 			<Tutorial
 				price={0}
 				bought={false}
@@ -51,10 +54,10 @@ export default ({
 				previewUrl={previewUrl}
 				videoUrl={videoUrl}
 			/>
-			*/ }
+			*/}
 
-			{/* Free / bought */}
-			{/*
+				{/* Free / bought */}
+				{/*
 				<Tutorial
 					price={0}
 					bought={true}
@@ -64,17 +67,18 @@ export default ({
 				/>
 			*/}
 
-			{/* Tutorial as admin */}
-			{ 
-				<Tutorial
-					price={0}
-					bought={true}
-					description={description}
-					previewUrl={previewUrl}
-					videoUrl={videoUrl}
-					admin={true} // Mimic auth
-				/>
-			}
-		</Main>
+				{/* Tutorial as admin */}
+				{
+					<Tutorial
+						price={0}
+						bought={true}
+						description={description}
+						previewUrl={previewUrl}
+						videoUrl={videoUrl}
+						admin={true} // Mimic auth
+					/>
+				}
+			</Main>
+		</Layout>
 	)
 }

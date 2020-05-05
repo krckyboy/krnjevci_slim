@@ -1,6 +1,8 @@
+import React from 'react'
 import styled from 'styled-components'
 import Heading4 from '../components/Heading4'
 import Pagination from '../components/Pagination'
+import Layout from '../components/Layout/Layout'
 
 const Main = styled.main`
 	padding-top: 4.8rem;
@@ -54,27 +56,29 @@ const Table = styled.table`
 
 export default () => {
 	return (
-		<Main className='content'>
-			<Heading4 isCenter={true}>Istorija kupovine</Heading4>
-			<Table>
-				<thead>
-					<tr>
-						<th>Artikl</th>
-						<th>Datum</th>
-						<th>Cena</th>
-					</tr>
-				</thead>
-				<tbody>
-					{purchases.map((p) => (
-						<tr key={p.id}>
-							<td>{p.article}</td>
-							<td>{p.date}</td>
-							<td>{p.price}</td>
+		<Layout>
+			<Main className='content'>
+				<Heading4 isCenter={true}>Istorija kupovine</Heading4>
+				<Table>
+					<thead>
+						<tr>
+							<th>Artikl</th>
+							<th>Datum</th>
+							<th>Cena</th>
 						</tr>
-					))}
-				</tbody>
-			</Table>
-			<Pagination />
-		</Main>
+					</thead>
+					<tbody>
+						{purchases.map((p) => (
+							<tr key={p.id}>
+								<td>{p.article}</td>
+								<td>{p.date}</td>
+								<td>{p.price}</td>
+							</tr>
+						))}
+					</tbody>
+				</Table>
+				<Pagination />
+			</Main>
+		</Layout>
 	)
 }

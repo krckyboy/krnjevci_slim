@@ -1,7 +1,9 @@
+import React from 'react'
 import styled from 'styled-components'
 import Button3 from '../components/buttons/Button3'
 import Heading4 from '../components/Heading4'
 import ParentInput from '../components/form/ParentInput'
+import Layout from '../components/Layout/Layout'
 
 const Main = styled.main`
 	padding-top: 4.8rem;
@@ -32,15 +34,17 @@ const StyledParentInput = styled(ParentInput)`
 
 export default () => {
 	return (
-		<Main className='content'>
-			<Heading4 isCenter={true}>Resetuj lozinku</Heading4>
-			<form>
-				<FormEl>
-					<label htmlFor='email'>Email</label>
-					<StyledParentInput type='email' name='email' />
-				</FormEl>
-				<StyledButton>Pošalji instrukcije</StyledButton>
-			</form>
-		</Main>
+		<Layout>
+			<Main className='content'>
+				<Heading4 isCenter={true}>Resetuj lozinku</Heading4>
+				<form>
+					<FormEl>
+						<label htmlFor='email'>Email</label>
+						<StyledParentInput type='email' name='email' />
+					</FormEl>
+					<StyledButton>Pošalji instrukcije</StyledButton>
+				</form>
+			</Main>
+		</Layout>
 	)
 }

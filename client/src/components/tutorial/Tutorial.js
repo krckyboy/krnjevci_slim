@@ -1,3 +1,4 @@
+import React from 'react'
 import Heading4 from '../Heading4'
 import Bought from './Bought'
 import PremiumSign from './PremiumOrNot'

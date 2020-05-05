@@ -11,6 +11,13 @@ import Login from '../pages/Login'
 import Register from '../pages/Register'
 import Cart from '../pages/Cart'
 import MyTutorials from '../pages/MyTutorials'
+import Tutorials from '../pages/Tutorials'
+import MyAccount from '../pages/MyAccount'
+import PurchaseHistory from '../pages/PurchaseHistory'
+import AddTutorial from '../pages/dev/AddTutorial'
+import EditTutorial from '../pages/dev/EditTutorial'
+import Tutorial from '../pages/Tutorial'
+import ResetPassword from '../pages/ResetPassword'
 
 // import AuthenticationProvider from '../contexts/authenticationContext'
 // import MessagesProvider from '../contexts/messagesContext'
@@ -72,6 +79,41 @@ function App() {
 					exact
 					path={process.env.PUBLIC_URL + '/moji_tutorijali'}
 					component={MyTutorials}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/tutorijali'}
+					component={Tutorials}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/moj_nalog'}
+					component={MyAccount}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/istorija_kupovine'}
+					component={PurchaseHistory}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/dev/dodaj_tutorijal'}
+					component={AddTutorial}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/dev/izmeni_tutorijal'}
+					component={EditTutorial}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/tutorijal'}
+					component={Tutorial}
+				/>
+				<Route
+					exact
+					path={process.env.PUBLIC_URL + '/resetuj_lozinku'}
+					component={ResetPassword}
 				/>
 				<Route component={NotExist} />
 			</Switch>
