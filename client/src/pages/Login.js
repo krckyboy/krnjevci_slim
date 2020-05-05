@@ -16,20 +16,6 @@ const Main = styled.main`
 	padding-right: 2.4rem;
 `
 
-const Hr = styled.hr`
-	border: 1px solid #b1c9e8;
-	max-width: 100%;
-	margin-top: 2.4rem;
-`
-
-const Ili = styled.p`
-	font-weight: 600;
-	font-size: 1.4rem;
-	line-height: 146.28%;
-	text-align: center;
-	margin-top: 1.6rem;
-`
-
 const Form = styled.form`
 	label {
 		margin-top: 1.6rem;

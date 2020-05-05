@@ -18,10 +18,15 @@ const P = styled.p`
 	margin-bottom: 3.2rem;
 `
 
-const Video = styled.iframe`
-	max-width: 100%;
-	border: none;
-`
+// const Video = styled.iframe`
+// 	max-width: 100%;
+// 	border: none;
+// `
+
+// const Img = styled.img`
+// 	max-width: 100%;
+// 	margin-bottom: 3.2rem;
+// `
 
 const Button = styled(Button2)`
 	margin-top: 3.2rem;
@@ -31,11 +36,6 @@ const BodyPadding = styled.div`
 	/* .bodyPadding fallback */
 	padding-left: 2.4rem;
 	padding-right: 2.4rem;
-`
-
-const Img = styled.img`
-	max-width: 100%;
-	margin-bottom: 3.2rem;
 `
 
 // These styles are necessary because of Vimeo blank space bug in mobile viewport.
@@ -68,9 +68,9 @@ export default () => {
 	return (
 		<Section>
 			<Heading2>O nama</Heading2>
-			{ /*
+			{/*
 				<Img src={'/images/index_register_background.jpg'} />
-			*/ }
+			*/}
 			<BodyPadding>
 				<P>
 					Škola harmonike “Krnjevac”, odnosno “Krnjevci”, je izvorište vrhunskih

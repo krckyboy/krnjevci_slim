@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import Button3 from '../components/buttons/Button3'
 import Heading4 from '../components/Heading4'
@@ -11,6 +12,7 @@ import {
 	useElements,
 } from '@stripe/react-stripe-js'
 import axios from 'axios'
+import {Link} from 'react-router-dom'
 
 const Main = styled.main`
 	padding-top: 4.8rem;
@@ -131,7 +133,7 @@ const CheckoutForm = () => {
 			const { id } = paymentMethod
 
 			try {
-				const { data } = await axios.post('http://localhost:5000/api/test_charge', {
+				const { data } = await axios.post('/api/test_charge', {
 					id,
 					amount: 1099, // You will fetch that in BE, not here
 				})
@@ -171,7 +173,7 @@ export default () => {
 				{demoTutorials.map((t) => (
 					<div className='item' key={t.id}>
 						<div className='top'>
-							<a>{t.title}</a>
+							<Link>{t.title}</Link>
 							<div>
 								<span>{t.price}RSD</span>
 								<img src='/images/svg/delete.svg' alt='Delete' />
