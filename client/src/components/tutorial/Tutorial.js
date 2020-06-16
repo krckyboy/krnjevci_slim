@@ -169,7 +169,7 @@ export default ({
 					<StyledVideo video={videoUrl} marginTop={true} />
 				)}
 			</VideoContainer>
-			{addToCart && (<StyledButton>Dodaj u korpu</StyledButton>)}
+			{addToCart && <StyledButton>Dodaj u korpu</StyledButton>}
 			{isAdmin && <StyledButton>Izmeni</StyledButton>}
 		</div>
 	)

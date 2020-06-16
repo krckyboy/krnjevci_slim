@@ -30,25 +30,6 @@ const Input = styled.input`
 	}
 `
 
-const FiltersContainer = styled.div`
-	margin-bottom: 1.2rem;
-	display: flex;
-
-	span {
-		font-weight: bold;
-		font-size: 1.4rem;
-		line-height: 1.9rem;
-		margin-right: 0.4rem;
-	}
-`
-
-/*
-<FiltersContainer>
-    <span>Najnovije</span>
-    <img src={'/images/svg/arrowDown.svg'} alt='Sort by' />
-</FiltersContainer>
-*/
-
 export default () => (
 	<SearchBarContainer>
 		<InputElementsContainer>

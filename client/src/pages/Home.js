@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Tutorials from '../components/Home/Tutorials'
 import TopSection from '../components/Home/TopSection'
@@ -12,6 +12,9 @@ const Content = styled.main`
 `
 
 export default () => {
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
 	return (
 		<Layout>
 			<Content className='content'>

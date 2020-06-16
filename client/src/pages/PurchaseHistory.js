@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Heading4 from '../components/Heading4'
 import Pagination from '../components/Pagination'
@@ -55,6 +55,9 @@ const Table = styled.table`
 `
 
 export default () => {
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
 	return (
 		<Layout>
 			<Main className='content'>

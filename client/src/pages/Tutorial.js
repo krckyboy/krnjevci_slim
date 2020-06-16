@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Tutorial from '../components/tutorial/Tutorial'
 import Layout from '../components/Layout/Layout'
@@ -20,6 +20,9 @@ export default ({
 	duration = '30',
 	description = 'Autor ove kompozicije je Aleksandar Todorović Krnjevac.',
 }) => {
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
 	return (
 		<Layout>
 			<Main className='content'>

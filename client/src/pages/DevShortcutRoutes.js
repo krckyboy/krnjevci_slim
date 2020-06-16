@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import Layout from '../components/Layout/Layout'
@@ -25,6 +25,9 @@ const StyledLink = styled(NavLink)`
 `
 
 export default () => {
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
 	return (
 		<Layout>
 			<Main className='content'>

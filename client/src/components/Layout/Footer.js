@@ -31,7 +31,7 @@ export default () => {
 			<p>
 				© 2020{' '}
 				<a href='https://krcky.dev/' target='_blank' rel='noopener noreferrer'>
-					<strong>Dušan Todorović Krnjevac (Krcky)</strong>
+					<strong>Dušan Todorović Krnjevac</strong>
 				</a>{' '}
 			</p>
 			<P>Sva prava zadržana</P>

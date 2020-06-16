@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Button3 from '../components/buttons/Button3'
 import Heading4 from '../components/Heading4'
@@ -43,6 +43,9 @@ const StyledParentInput = styled(ParentInput)`
 `
 
 export default () => {
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
 	return (
 		<Layout>
 			<Main className='content'>
